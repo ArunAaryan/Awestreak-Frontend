@@ -5,16 +5,21 @@ import "./index.css";
 import Root from "./routes/root.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Home.tsx";
-
+import Navbar from "./Navbar/index.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    children: [
+      {
+        path: "home",
+        element: <Home />,
+      },
+    ],
   },
-  {
-    path: "/home",
-    element: <Home />,
-  },
+  //   { path: "/home",
+  //     element: <Home />,
+  //   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

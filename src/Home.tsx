@@ -1,44 +1,30 @@
+import { useEffect, useState } from "react";
 import Board, { IBoardProps } from "./Boards/index.tsx";
+import { useRequestProcessor } from "./requestProcessor.ts";
+import axiosClient from "./axios.ts";
 export interface IHomeProps {
   boards: Array<IBoardProps>;
 }
-
 const Home = () => {
-  const boards: Array<IBoardProps> = [
+  const { query } = useRequestProcessor();
+  const {
+    data: boards,
+    isLoading,
+    isError,
+  } = query(
+    ["boards"],
+    () => axiosClient.get("/boards?joinStreak=true").then((res) => res.data),
     {
-      boardName: "Eating Healthy 🍽️",
-      boardId: "1",
-      numberOfPeople: 3,
-      description: "Discover the joy of nutritious meals!",
+      enabled: true,
     },
-    {
-      boardName: "Reading 📕",
-      boardId: "2",
-      numberOfPeople: 4,
-      description: "Dive into the world of books and knowledge.",
-    },
-    {
-      boardName: "Swimming 🏊",
-      boardId: "3",
-      numberOfPeople: 5,
-      description: "Stay fit and enjoy the water!",
-    },
-    {
-      boardName: "Activity 🚶",
-      boardId: "1",
-      numberOfPeople: 7,
-      description: "Engage in exciting physical activities.",
-    },
-    {
-      boardName: "Yoga 🧘",
-      boardId: "1",
-      numberOfPeople: 4,
-      description: "Find peace and balance through yoga.",
-    },
-  ];
+  );
+  console.log("boardData", boards);
   return (
     <div className="flex flex-col gap-4">
-      {boards && boards.map((board) => <Board {...board} />)}
+      {boards &&
+        boards.map((board) => (
+          <Board {...board} numberOfPeople={board?.Streak?.length} />
+        ))}
     </div>
   );
 };

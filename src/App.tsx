@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Button } from "./components/ui/button";
-
+import { QueryClient, QueryClientProvider } from "react-query";
+const queryClient = new QueryClient();
 function App() {
   return (
     <>
-      <main className="container mx-auto p-8"></main>
+      <QueryClientProvider client={queryClient}>
+        <main className="container mx-auto p-8"></main>
+      </QueryClientProvider>
     </>
   );
 }

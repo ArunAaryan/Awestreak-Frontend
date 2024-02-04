@@ -1,4 +1,6 @@
+import { IUser } from "@/types";
 import React from "react";
+import { Link } from "react-router-dom";
 
 export interface IBoardProps {
   id: string;
@@ -7,6 +9,8 @@ export interface IBoardProps {
   image?: string;
   description?: string;
   Streak?: Array<IStreak>;
+  created_at: string;
+  updated_at: string;
 }
 export interface IStreak {
   id: string;
@@ -15,6 +19,7 @@ export interface IStreak {
   userId: string;
   boardId: string;
   current_streak: Number;
+  User: IUser;
 }
 const index: React.FC<IBoardProps> = ({
   id,
@@ -25,7 +30,7 @@ const index: React.FC<IBoardProps> = ({
 }) => {
   console.log(description);
   return (
-    <div className="flex justify-start items-center gap-2 py-3 hover:cursor-pointer hover:border-2 border-opacity-30 rounded-xl border-gray-600 hover:px-4 transition-all duration-300">
+    <div className="flex justify-start items-center gap-2 py-3  hover:border-2 border-opacity-30 rounded-xl border-gray-600 hover:px-4 transition-all duration-300">
       <div className="h-20 w-20 bg-teal-300 rounded-full ">
         <img
           // src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/800px-Good_Food_Display_-_NCI_Visuals_Online.jpg"
@@ -40,9 +45,11 @@ const index: React.FC<IBoardProps> = ({
           <p className="text-gray-200 text-xs items-baseline flex">
             {numberOfPeople} 👥
           </p>
-          <p className="text-gray-100 text-xs border-2 px-3 py-0.5 rounded-md border-gray-700 hover:cursor-pointer">
-            join
-          </p>
+          <Link to={`/board/${id}`}>
+            <p className="text-gray-100 text-xs border-2 px-3 py-0.5 rounded-md border-gray-700 hover:cursor-pointer">
+              join
+            </p>
+          </Link>
         </div>
       </div>
     </div>

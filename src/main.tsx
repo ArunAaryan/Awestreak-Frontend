@@ -1,19 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 import Root from "./routes/root.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./Home.tsx";
-import Navbar from "./Navbar/index.tsx";
+import AllBoards from "./AllBoards.tsx";
+import BoardDetail, { boardDetailLoader } from "./Boards/BoardDetail.tsx";
+import { QueryClient } from "react-query";
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [
       {
-        path: "home",
-        element: <Home />,
+        path: "allboards",
+        element: <AllBoards />,
+      },
+      {
+        path: "board/:id",
+        element: <BoardDetail />,
+        loader: boardDetailLoader(queryClient),
       },
     ],
   },

@@ -5,7 +5,7 @@ import axiosClient from "./axios.ts";
 export interface IHomeProps {
   boards: Array<IBoardProps>;
 }
-const Home = () => {
+const AllBoards = () => {
   const { query } = useRequestProcessor();
   const {
     data: boards,
@@ -22,11 +22,15 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-4">
       {boards &&
-        boards.map((board) => (
-          <Board {...board} numberOfPeople={board?.Streak?.length} />
+        boards.map((board: IBoardProps) => (
+          <Board
+            {...board}
+            numberOfPeople={board?.Streak?.length ?? 0}
+            key={board.id}
+          />
         ))}
     </div>
   );
 };
 
-export default Home;
+export default AllBoards;

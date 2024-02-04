@@ -46,7 +46,7 @@ const BoardDetail = () => {
     <div className="">
       {board && (
         <>
-          <div className="relative h-[10vh] w-[100%] rounded-md ">
+          <div className="relative h-[20vh] w-[100%] rounded-md ">
             <img
               src={board?.image}
               alt="Background"
@@ -71,7 +71,7 @@ const BoardDetail = () => {
             </div>
           </div>
           <div>
-            {board.Streak?.length && (
+            {board?.Streak && board?.Streak?.length > 0 && (
               <UserView users={getUsers(board.Streak) ?? []}></UserView>
             )}
           </div>

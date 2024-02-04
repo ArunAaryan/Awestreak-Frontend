@@ -32,11 +32,7 @@ const index: React.FC<IBoardProps> = ({
   return (
     <div className="flex justify-start items-center gap-2 py-3  hover:border-2 border-opacity-30 rounded-xl border-gray-600 hover:px-4 transition-all duration-300">
       <div className="h-20 w-20 bg-teal-300 rounded-full ">
-        <img
-          // src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/800px-Good_Food_Display_-_NCI_Visuals_Online.jpg"
-          src={image}
-          className="h-20 w-20 rounded-full object-cover"
-        />
+        <img src={image} className="h-20 w-20 rounded-full object-cover" />
       </div>
       <div className="flex flex-col px-2 flex-1 gap-2">
         <p className="text-gray-100 text-lg">{name}</p>

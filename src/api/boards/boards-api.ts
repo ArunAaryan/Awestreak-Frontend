@@ -1,7 +1,6 @@
 import axiosClient from "@/axios";
 import {
   QueryClient,
-  UseQueryOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -18,12 +17,12 @@ export const getBoardById = async (id: string) => {
 };
 
 export const getAllBoards = async () => {
-  const res = await axiosClient.get("/boards");
+  const res = await axiosClient.get("/boards?joinStreak=true");
   return res.data;
 };
 
 export const getMyBoards = async () => {
-  const res = await axiosClient.get("/boards/my");
+  const res = await axiosClient.get("/boards/my?joinStreak=true");
   return res.data;
 };
 
@@ -51,6 +50,13 @@ export function useGetAllBoards() {
   return useQuery<Array<IBoardProps>>({
     queryKey: boardQueryKeys.all,
     queryFn: getAllBoards,
+    staleTime,
+  });
+}
+export function useGetMyBoards() {
+  return useQuery<Array<IBoardProps>>({
+    queryKey: boardQueryKeys.my,
+    queryFn: getMyBoards,
     staleTime,
   });
 }

@@ -1,5 +1,5 @@
 import Board from "./Board.tsx";
-import { useGetAllBoards } from "@/api/boards/boards-api.ts";
+import { useGetAllBoards, useGetMyBoards } from "@/api/boards/boards-api.ts";
 import { IBoardProps } from "@/api/boards/boards.types.ts";
 
 interface IBoardList {
@@ -23,7 +23,11 @@ const BoardList = () => {
   // const initialData = useLoaderData() as Awaited<
   //   ReturnType<ReturnType<typeof boardListLoader>>
   // >;
-  const { data: boards } = useGetAllBoards();
+  const myBoards = window.location.href.includes("/boards/my") ? true : false;
+  console.log(myBoards, "myBoards");
+  const { data: boards } = !myBoards ? useGetAllBoards() : useGetMyBoards();
+  console.log(boards, "boards");
+
   if (boards) {
     return <BoardList_ boards={boards} />;
   }

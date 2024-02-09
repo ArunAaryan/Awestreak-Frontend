@@ -27,7 +27,6 @@ const router = createBrowserRouter([
         index: true,
         element: <HomeTemp />,
         path: "/",
-        loader: boardListLoaderAll(queryClient),
       },
     ],
   },
@@ -37,6 +36,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "all",
+        element: <BoardList />,
+        loader: boardListLoaderAll(queryClient),
+      },
+      {
+        path: "my",
         element: <BoardList />,
         loader: boardListLoaderAll(queryClient),
       },

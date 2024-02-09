@@ -1,39 +1,14 @@
-import axiosClient from "@/axios";
-import { QueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useLoaderData, useParams } from "react-router-dom";
-import { IBoardProps, IStreak } from ".";
-import { useCallback } from "react";
 import UserView from "./UserView";
-import { IUser } from "@/types";
+import { useGetBoardDetail } from "@/api/boards/boards-api";
+import { IStreak, IUser } from "@/api/boards/boards.types";
 
-const boardDetailQuery = (id?: string) => ({
-  queryKey: ["boards", "detail", id],
-  queryFn: async (): Promise<IBoardProps> =>
-    axiosClient.get(`/board/${id}`).then((res) => res.data),
-});
-
-export const boardDetailLoader =
-  (queryClient: QueryClient) =>
-  async ({ params }) => {
-    const query = boardDetailQuery(params.id);
-    // ⬇️ return data or fetch it
-    return (
-      queryClient.getQueryData(query.queryKey) ??
-      (await queryClient.fetchQuery(query))
-    );
-  };
 // there is a hook problem useRequestProcessor() cannot be used; change this
 const BoardDetail = () => {
-  const params = useParams();
-  const initialData = useLoaderData() as Awaited<
-    ReturnType<ReturnType<typeof loader>>
-  >;
-  const {
-    data: board,
-    isLoading,
-    isError,
-  } = useQuery<IBoardProps>({ ...boardDetailQuery(params.id), initialData });
+  const { data: board } = useGetBoardDetail();
   const userCount = board?.Streak?.length ?? 0;
+
   const getUsers = (streakArray: Array<IStreak>) => {
     let users: Array<IUser> = streakArray.map((streak) => {
       let user = streak.User;
@@ -42,6 +17,7 @@ const BoardDetail = () => {
     });
     return users;
   };
+
   return (
     <div className="">
       {board && (

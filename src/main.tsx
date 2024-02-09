@@ -3,10 +3,16 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import Root from "./routes/root.tsx";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import AllBoards from "./AllBoards.tsx";
-import BoardDetail, { boardDetailLoader } from "./Boards/BoardDetail.tsx";
+import BoardDetail from "./Boards/BoardDetail.tsx";
 import { QueryClient } from "react-query";
 import NewBoard from "./Boards/NewBoard.tsx";
+import BoardList from "./Boards/BoardList.tsx";
+
+import {
+  boardListLoaderAll,
+  boardListLoaderMy,
+} from "./api/boards/boards-api.ts";
+import HomeTemp from "./HomeTemp.tsx";
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   // {
@@ -19,23 +25,25 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AllBoards />,
+        element: <HomeTemp />,
         path: "/",
+        loader: boardListLoaderAll(queryClient),
       },
     ],
   },
   {
     element: <Root />,
-    path: "/board",
+    path: "/boards",
     children: [
       {
         path: "all",
-        element: <AllBoards />,
+        element: <BoardList />,
+        loader: boardListLoaderAll(queryClient),
       },
       {
         element: <BoardDetail />,
         path: ":id",
-        loader: boardDetailLoader(queryClient),
+        loader: boardListLoaderMy(queryClient),
       },
       {
         path: "create",

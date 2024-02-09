@@ -8,7 +8,10 @@ const UserView: React.FC<IUserProps> = ({ users }) => {
     <div className="flex flex-col">
       {users &&
         users.map((user) => (
-          <div className="flex gap-2 justify-start items-center py-3 rounded-xl">
+          <div
+            className="flex gap-2 justify-start items-center py-3 rounded-xl"
+            key={user.id}
+          >
             <div className="flex flex-col p-2">
               <div className="h-10 w-10 bg-teal-300 rounded-full flex items-center justify-center flex-col">
                 {user.image && (

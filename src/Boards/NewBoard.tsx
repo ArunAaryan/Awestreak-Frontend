@@ -1,10 +1,7 @@
-import axiosClient from "@/axios";
+import { useCreateBoard } from "@/api/boards/boards-api";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { Navigate, redirect, useNavigate } from "react-router-dom";
 export interface IBoardInput {
   name: string;
   description: string;
@@ -12,19 +9,12 @@ export interface IBoardInput {
 }
 const NewBoard = () => {
   const { register, handleSubmit, watch, formState } = useForm<IBoardInput>();
-  // const onSubmit : SubmitHandler<IBoardInput> = (data) =>{}
-  const navigate = useNavigate();
-  const successHandler = (res) => {
-    navigate(`/board/${res.data.id}`);
-  };
-  const { mutate } = useMutation<IBoardInput>({
-    mutationFn: (values) => axiosClient.post(`/board`, values),
-    onSuccess: successHandler,
-  });
+
+  const createUser = useCreateBoard();
   return (
     <div>
       <form
-        onSubmit={handleSubmit(mutate)}
+        onSubmit={handleSubmit(createUser.mutate)}
         className="text-gray-50 flex flex-col gap-4"
       >
         <div>

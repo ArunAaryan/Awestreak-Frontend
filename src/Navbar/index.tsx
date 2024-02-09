@@ -2,9 +2,9 @@ import Navitem, { INavItem } from "./Navitem";
 
 const index = () => {
   const links: Array<INavItem> = [
-    { name: "All Boards", link: "/board/all" },
-    { name: "My Boards", link: "/myboards" },
-    { name: "Create Board", link: "/board/create" },
+    { name: "All Boards", link: "/boards/all" },
+    { name: "My Boards", link: "/boards/my" },
+    { name: "Create Board", link: "/boards/create" },
   ];
   return (
     <div className="flex gap-4">

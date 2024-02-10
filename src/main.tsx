@@ -42,12 +42,11 @@ const router = createBrowserRouter([
       {
         path: "my",
         element: <BoardList />,
-        loader: boardListLoaderAll(queryClient),
+        loader: boardListLoaderMy(queryClient),
       },
       {
         element: <BoardDetail />,
         path: ":id",
-        loader: boardListLoaderMy(queryClient),
       },
       {
         path: "create",

@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
+import { userContext as UserContext } from "./routes/UserContext";
 const queryClient = new QueryClient();
 function App() {
   return (

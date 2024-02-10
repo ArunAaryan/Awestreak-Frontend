@@ -1,4 +1,4 @@
-import { IUser } from "@/types";
+import { IBoardProps } from "@/api/boards/boards.types";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -12,7 +12,7 @@ const Board: React.FC<IBoardProps> = ({
   console.log(description);
   return (
     <Link to={`/boards/${id}`}>
-      <div className="flex justify-start items-center gap-2 py-3  hover:border-2 border-opacity-30 rounded-xl border-gray-600 hover:px-4 transition-all duration-300">
+      <div className="flex justify-start items-center gap-2 py-3  hover:border-2 border-opacity-30 rounded-xl border-gray-600 hover:px-4 transition-all duration-300 ease-in-out">
         <div className="h-20 w-20 bg-teal-300 rounded-full ">
           <img src={image} className="h-20 w-20 rounded-full object-cover" />
         </div>

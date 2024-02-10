@@ -3,6 +3,8 @@ import { useLoaderData, useParams } from "react-router-dom";
 import UserView from "./UserView";
 import { useGetBoardDetail } from "@/api/boards/boards-api";
 import { IStreak, IUser } from "@/api/boards/boards.types";
+import { useContext } from "react";
+import { userContext } from "@/routes/UserContext";
 
 // there is a hook problem useRequestProcessor() cannot be used; change this
 const BoardDetail = () => {
@@ -17,6 +19,11 @@ const BoardDetail = () => {
     });
     return users;
   };
+  // put this in useCallback
+  const { userId } = useContext(userContext);
+  const getUserJoinStatus = board?.Streak?.map((user) => user.userId).find(
+    (user) => user === userId,
+  );
 
   return (
     <div className="">
@@ -36,13 +43,22 @@ const BoardDetail = () => {
                   {board?.description}
                 </h2>
               </div>
-              <div className="flex flex-col justify-end">
-                <p className="text-gray-100 text-xs opacity-4">
-                  {userCount} users
-                </p>
-                <p className="text-gray-100 text-xs opacity-4">
-                  {new Date(board.created_at).toDateString()}
-                </p>
+              <div className="flex flex-col items-end justify-between">
+                <div>
+                  {!getUserJoinStatus && (
+                    <button className="flex text-gray-100 text-xs border-2 border-gray-100 px-2 my-1 rounded-md max-w-min">
+                      join
+                    </button>
+                  )}
+                </div>
+                <div className="flex flex-col justify-end">
+                  <p className="text-gray-100 text-xs opacity-4">
+                    {userCount} users
+                  </p>
+                  <p className="text-gray-100 text-xs opacity-4">
+                    {new Date(board.created_at).toDateString()}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

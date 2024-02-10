@@ -1,6 +1,7 @@
 import axiosClient from "@/axios";
 import {
   QueryClient,
+  UseQueryOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -46,43 +47,48 @@ export function getBoardDetailQuery(id: string) {
   };
 }
 
-export function useGetAllBoards() {
+export function useGetAllBoards(initialData: any) {
   return useQuery<Array<IBoardProps>>({
     queryKey: boardQueryKeys.all,
     queryFn: getAllBoards,
     staleTime,
+    initialData,
   });
 }
-export function useGetMyBoards() {
+export function useGetMyBoards(initialData: any) {
   return useQuery<Array<IBoardProps>>({
     queryKey: boardQueryKeys.my,
     queryFn: getMyBoards,
     staleTime,
+    initialData,
   });
 }
 export function useGetBoardDetail() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   if (!id) {
-    console.error("param id is not given");
-    return;
+    throw new Error("Board ID is not provided.");
   }
-  return useQuery({
+  return useQuery<IBoardProps>({
     queryKey: boardQueryKeys.detail(id),
     queryFn: () => getBoardById(id),
     staleTime,
   });
 }
-export const boardListLoaderAll = (queryClient: QueryClient) => () =>
-  queryClient.fetchQuery({
+export const boardListLoaderAll = (queryClient: QueryClient) => () => {
+  console.log("boardlistall all");
+  return queryClient.fetchQuery({
     ...getAllBoardsQuery(),
     staleTime: 1000 * 60 * 2,
   });
+};
 
-export const boardListLoaderMy = (queryClient: QueryClient) => () =>
-  queryClient.fetchQuery({
-    ...getAllBoardsQuery(),
+export const boardListLoaderMy = (queryClient: QueryClient) => () => {
+  console.log("boardListmy loader");
+  return queryClient.fetchQuery({
+    ...getMyBoardsQuery(),
     staleTime: 1000 * 60 * 2,
   });
+};
 
 export const createBoard = async (boardData: IBoardInput) => {
   const res = await axiosClient.post("/boards", boardData);

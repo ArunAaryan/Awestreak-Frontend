@@ -1,13 +1,19 @@
 import Board from "./Board.tsx";
-import { useGetAllBoards, useGetMyBoards } from "@/api/boards/boards-api.ts";
+import {
+  boardListLoaderAll,
+  boardListLoaderMy,
+  useGetAllBoards,
+  useGetMyBoards,
+} from "@/api/boards/boards-api.ts";
 import { IBoardProps } from "@/api/boards/boards.types.ts";
+import { useLoaderData } from "react-router-dom";
 
 interface IBoardList {
   boards: Array<IBoardProps>;
 }
 const BoardList_: React.FC<IBoardList> = ({ boards }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 transition-all duration-500 ease-in-out">
       {boards &&
         boards.map((board: IBoardProps) => (
           <Board
@@ -20,16 +26,25 @@ const BoardList_: React.FC<IBoardList> = ({ boards }) => {
   );
 };
 const BoardList = () => {
-  // const initialData = useLoaderData() as Awaited<
-  //   ReturnType<ReturnType<typeof boardListLoader>>
-  // >;
+  const initialData = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof boardListLoaderMy>>
+  >;
+  const initialData2 = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof boardListLoaderAll>>
+  >;
   const myBoards = window.location.href.includes("/boards/my") ? true : false;
   console.log(myBoards, "myBoards");
-  const { data: boards } = !myBoards ? useGetAllBoards() : useGetMyBoards();
+  const { data: boards } = !myBoards
+    ? useGetAllBoards(initialData2)
+    : useGetMyBoards(initialData);
   console.log(boards, "boards");
 
   if (boards) {
-    return <BoardList_ boards={boards} />;
+    return (
+      <div className="transition-all duration-500 ease-in-out">
+        <BoardList_ boards={boards} />
+      </div>
+    );
   }
 };
 export default BoardList;

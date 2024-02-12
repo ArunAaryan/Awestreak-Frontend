@@ -9,7 +9,7 @@ const UserView: React.FC<IUserProps> = ({ users }) => {
       {users &&
         users.map((user) => (
           <div
-            className="flex gap-2 justify-start items-center py-3 rounded-xl"
+            className="flex gap-2 justify-start items-center py-3 rounded-xl transition-all duration-1000"
             key={user.id}
           >
             <div className="flex flex-col p-2">

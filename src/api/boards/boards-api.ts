@@ -9,7 +9,7 @@ import {
 import { boardQueryKeys } from "./boards.keys";
 import { useNavigate, useParams } from "react-router-dom";
 import { IBoardInput } from "@/Boards/NewBoard";
-import { IBoardProps } from "./boards.types";
+import { IBoardProps, IStreak } from "./boards.types";
 export const staleTime = Infinity;
 export const getBoardById = async (id: string) => {
   console.log(id, "id getBoardById");
@@ -100,8 +100,33 @@ export function useCreateBoard() {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: createBoard,
-    onMutate: async () =>
-      await queryClient.cancelQueries({ queryKey: boardQueryKeys.all }),
+    onMutate: async () => await queryClient.cancelQueries(boardQueryKeys.all),
     onSuccess: (data) => navigate(`/boards/${data.id}`),
+  });
+}
+
+export const joinBoard = async (boardId: string) => {
+  const res = await axiosClient.post(`boards/${boardId}/join`);
+  return res.data;
+};
+export function useJoinBoard() {
+  const { id: boardId } = useParams<{ id: string }>();
+  if (!boardId) {
+    throw new Error("Board ID is not provided.");
+  }
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: joinBoard,
+    onMutate: async (boardDetail) => {
+      console.log(boardDetail, "boardDetail onMutate");
+      await queryClient.cancelQueries(boardQueryKeys.all);
+      await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
+    },
+    onSuccess: async (boardDetail) => {
+      await queryClient.setQueryData(
+        boardQueryKeys.detail(boardDetail.id),
+        boardDetail,
+      );
+    },
   });
 }

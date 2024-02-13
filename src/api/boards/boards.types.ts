@@ -7,6 +7,7 @@ export interface IBoardProps {
   Streak?: Array<IStreak>;
   created_at: string;
   updated_at: string;
+  userId: string;
 }
 export interface IStreak {
   id: string;

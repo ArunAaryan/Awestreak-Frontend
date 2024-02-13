@@ -1,7 +1,11 @@
 import { useQuery } from "react-query";
 import { useLoaderData, useParams } from "react-router-dom";
 import UserView from "./UserView";
-import { useGetBoardDetail, useJoinBoard } from "@/api/boards/boards-api";
+import {
+  useGetBoardDetail,
+  useJoinBoard,
+  useLeaveBoard,
+} from "@/api/boards/boards-api";
 import { IStreak, IUser } from "@/api/boards/boards.types";
 import { useContext } from "react";
 import { userContext } from "@/routes/UserContext";
@@ -11,6 +15,8 @@ const BoardDetail = () => {
   const { data: board } = useGetBoardDetail();
 
   const joinBoard = useJoinBoard();
+
+  const leaveBoard = useLeaveBoard();
 
   const userCount = board?.Streak?.length ?? 0;
 
@@ -27,6 +33,7 @@ const BoardDetail = () => {
   const getUserJoinStatus = board?.Streak?.map((user) => user.userId).find(
     (user) => user === userId,
   );
+  console.log(getUserJoinStatus, "userjoin");
   return (
     <div className="">
       {board && (
@@ -56,8 +63,11 @@ const BoardDetail = () => {
                     </button>
                   )}
                   {getUserJoinStatus && (
-                    <button className="flex text-gray-50 text-xs border-2 border-gray-100 px-2 my-1 rounded-md max-w-min opacity-80">
-                      joined
+                    <button
+                      className="flex text-gray-50 text-xs border-2 border-gray-100 px-2 my-1 rounded-md max-w-min opacity-100"
+                      onClick={() => leaveBoard.mutate(board?.id)}
+                    >
+                      leave
                     </button>
                   )}
                 </div>

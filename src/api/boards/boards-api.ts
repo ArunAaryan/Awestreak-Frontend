@@ -100,7 +100,10 @@ export function useCreateBoard() {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: createBoard,
-    onMutate: async () => await queryClient.cancelQueries(boardQueryKeys.all),
+    onMutate: async () => {
+      await queryClient.cancelQueries(boardQueryKeys.all);
+      await queryClient.invalidateQueries(boardQueryKeys.all);
+    },
     onSuccess: (data) => navigate(`/boards/${data.id}`),
   });
 }

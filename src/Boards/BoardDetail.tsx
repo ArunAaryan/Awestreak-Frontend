@@ -118,11 +118,11 @@ const AdminUserActions: React.FC<IBoardProps> = ({ id }) => {
     <div className="flex gap-2 flex-col relative h-20 w-20 ">
       <div className="flex gap-2 flex-col  bg-white/10  absolute  top-0  left-0 h-20 w-20 backdrop-blur rounded-sm "></div>
       <div className="absolute z-10 translate-x-0 translate-y-0 m-2 flex flex-col gap-2 p-2">
-        <button className="flex text-xs bg-transparent    text-black py-0.5 px-2 bg-red-200 rounded-sm">
+        <button className="flex text-xs    text-black py-0.5 px-2 bg-red-200 rounded-sm">
           Delete
         </button>
         <button
-          className="flex text-xs bg-transparent    text-black py-0.5 px-2 bg-cyan-200 rounded-sm"
+          className="flex text-xs    text-black py-0.5 px-2 bg-cyan-200 rounded-sm"
           onClick={() => navigate(`/boards/${id}/edit`)}
         >
           Edit

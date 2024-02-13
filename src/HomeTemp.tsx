@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axiosClient from "./axios";
 
 const HomeTemp = () => {
-  const ARUN = "clrxmr5wj0001c5i25cgrpjqt";
+  // const ARUN = "clrxmr5wj0001c5i25cgrpjqt";
+  const ARUN = "clsko1pg600007gb98mvirva1";
   const RANJITHA = "clrz6u0n000004ks6q2bh3eiv";
   const navigate = useNavigate();
   const queryClient = useQueryClient();

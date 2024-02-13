@@ -13,6 +13,7 @@ import {
   boardListLoaderMy,
 } from "./api/boards/boards-api.ts";
 import HomeTemp from "./HomeTemp.tsx";
+import EditBoard from "./Boards/EditBoard.tsx";
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   // {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "create",
         element: <NewBoard />,
+      },
+      {
+        path: ":id/edit",
+        element: <EditBoard />,
       },
     ],
   },

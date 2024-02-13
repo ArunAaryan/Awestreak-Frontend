@@ -156,3 +156,24 @@ export function useLeaveBoard() {
     },
   });
 }
+export const editBoard = async (boardData: IBoardInput) => {
+  const res = await axiosClient.put(`boards/${boardData.id}`, boardData);
+  return res.data;
+};
+
+export function useEditBoard() {
+  const { id: boardId } = useParams<{ id: string }>();
+  if (!boardId) {
+    throw new Error("Board ID is not provided.");
+  }
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: editBoard,
+    onMutate: async () => {
+      await queryClient.cancelQueries(boardQueryKeys.all);
+      await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
+    },
+    onSuccess: (data) => navigate(`/boards/${data.id}`),
+  });
+}

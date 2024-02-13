@@ -1,21 +1,32 @@
-import { useCreateBoard } from "@/api/boards/boards-api";
+import { useEditBoard, useGetBoardDetail } from "@/api/boards/boards-api";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import { IBoardProps } from "@/api/boards/boards.types";
+import { useEffect } from "react";
 export interface IBoardInput {
-  id?: string;
   name: string;
   description: string;
   image: string;
 }
-const NewBoard = () => {
-  const { register, handleSubmit, watch, formState } = useForm<IBoardInput>();
-
-  const createUser = useCreateBoard();
+const EditBoard = () => {
+  const getBoard = useGetBoardDetail();
+  console.log(getBoard.data, "getBoard");
+  const { register, handleSubmit, watch, formState, setValue } =
+    useForm<IBoardProps>({});
+  useEffect(() => {
+    if (getBoard?.data) {
+      // Set form values using setValue
+      Object.keys(getBoard?.data).forEach((key) => {
+        setValue(key, getBoard.data[key]);
+      });
+    }
+  }, [getBoard.data, setValue]);
+  const editUser = useEditBoard();
   return (
     <div>
       <form
-        onSubmit={handleSubmit(createUser.mutate)}
+        onSubmit={handleSubmit(editUser.mutate)}
         className="text-gray-50 flex flex-col gap-4"
       >
         <div>
@@ -35,11 +46,11 @@ const NewBoard = () => {
           />
         </div>
         <Button type="submit" variant="outline">
-          Create Board
+          Submit
         </Button>
       </form>
     </div>
   );
 };
 
-export default NewBoard;
+export default EditBoard;

@@ -1,12 +1,12 @@
 import { useQuery } from "react-query";
-import { useLoaderData, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import UserView from "./UserView";
 import {
   useGetBoardDetail,
   useJoinBoard,
   useLeaveBoard,
 } from "@/api/boards/boards-api";
-import { IStreak, IUser } from "@/api/boards/boards.types";
+import { IBoardProps, IStreak, IUser } from "@/api/boards/boards.types";
 import { useContext } from "react";
 import { userContext } from "@/routes/UserContext";
 import {
@@ -24,7 +24,6 @@ const BoardDetail = () => {
   const leaveBoard = useLeaveBoard();
 
   const userCount = board?.Streak?.length ?? 0;
-
   const getUsers = (streakArray: Array<IStreak>) => {
     let users: Array<IUser> = streakArray.map((streak) => {
       let user = streak.User;
@@ -86,7 +85,7 @@ const BoardDetail = () => {
                         </p>
                       </PopoverTrigger>
                       <PopoverContent>
-                        <AdminUserActions />
+                        <AdminUserActions {...board} />
                       </PopoverContent>
                     </Popover>
                   )}
@@ -112,7 +111,9 @@ const BoardDetail = () => {
     </div>
   );
 };
-const AdminUserActions: React.FC = () => {
+
+const AdminUserActions: React.FC<IBoardProps> = ({ id }) => {
+  const navigate = useNavigate();
   return (
     <div className="flex gap-2 flex-col relative h-20 w-20 ">
       <div className="flex gap-2 flex-col  bg-white/10  absolute  top-0  left-0 h-20 w-20 backdrop-blur rounded-sm "></div>
@@ -120,7 +121,10 @@ const AdminUserActions: React.FC = () => {
         <button className="flex text-xs bg-transparent    text-black py-0.5 px-2 bg-red-200 rounded-sm">
           Delete
         </button>
-        <button className="flex text-xs bg-transparent    text-black py-0.5 px-2 bg-cyan-200 rounded-sm">
+        <button
+          className="flex text-xs bg-transparent    text-black py-0.5 px-2 bg-cyan-200 rounded-sm"
+          onClick={() => navigate(`/boards/${id}/edit`)}
+        >
           Edit
         </button>
       </div>

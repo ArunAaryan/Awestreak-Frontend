@@ -71,7 +71,7 @@ export function useGetBoardDetail() {
   return useQuery<IBoardProps>({
     queryKey: boardQueryKeys.detail(id),
     queryFn: () => getBoardById(id),
-    staleTime,
+    staleTime: 100 * 60 * 2,
   });
 }
 export const boardListLoaderAll = (queryClient: QueryClient) => () => {
@@ -173,10 +173,12 @@ export function useEditBoard() {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: editBoard,
-    onMutate: async () => {
-      await queryClient.cancelQueries(boardQueryKeys.all);
-      await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
+    onMutate: (boardData) => {
+      queryClient.cancelQueries(boardQueryKeys.all);
     },
-    onSuccess: (data) => navigate(`/boards/${data.id}`),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(boardQueryKeys.all);
+      navigate(`/boards/${data.id}`);
+    },
   });
 }

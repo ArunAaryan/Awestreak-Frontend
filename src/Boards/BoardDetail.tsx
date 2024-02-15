@@ -18,6 +18,7 @@ import {
 // there is a hook problem useRequestProcessor() cannot be used; change this
 const BoardDetail = () => {
   const { data: board } = useGetBoardDetail();
+  console.log(board?.name, "boardName");
 
   const joinBoard = useJoinBoard();
 

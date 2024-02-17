@@ -5,12 +5,12 @@ import axiosClient from "./axios";
 const HomeTemp = () => {
   // const ARUN = "clrxmr5wj0001c5i25cgrpjqt";
   const ARUN = "clsko1pg600007gb98mvirva1";
-  const RANJITHA = "clrz6u0n000004ks6q2bh3eiv";
+  const RANJITHA = "clsnebkji00017gb9lm1zxu5q";
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const setLocalStorageUser = async (userId: string) => {
     queryClient.invalidateQueries();
-    const user = await localStorage.setItem("currentUser", userId);
+    await localStorage.setItem("currentUser", userId);
     axiosClient.defaults.headers.Authorization = userId;
     navigate("/boards/all");
   };

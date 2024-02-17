@@ -10,6 +10,7 @@ import { boardQueryKeys } from "./boards.keys";
 import { useNavigate, useParams } from "react-router-dom";
 import { IBoardInput } from "@/Boards/NewBoard";
 import { IBoardProps, IStreak } from "./boards.types";
+import { toast } from "sonner";
 export const staleTime = Infinity;
 export const getBoardById = async (id: string) => {
   console.log(id, "id getBoardById");
@@ -164,6 +165,9 @@ export const editBoard = async (boardData: IBoardInput) => {
   return res.data;
 };
 
+export const showEditToast = () => toast("Edited Successfully!", {});
+
+export const showDeleteToast = () => toast("Deleted Successfully!", {});
 export function useEditBoard() {
   const { id: boardId } = useParams<{ id: string }>();
   if (!boardId) {
@@ -179,6 +183,30 @@ export function useEditBoard() {
     onSuccess: (data) => {
       queryClient.invalidateQueries(boardQueryKeys.all);
       navigate(`/boards/${data.id}`);
+      showEditToast();
+    },
+  });
+}
+export const deleteBoard = async (boardId: string) => {
+  const res = await axiosClient.delete(`boards/${boardId}`);
+  return res.data;
+};
+export function useDeleteBoard() {
+  const { id: boardId } = useParams<{ id: string }>();
+  if (!boardId) {
+    throw new Error("Board ID is not provided.");
+  }
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: deleteBoard,
+    onMutate: () => {
+      queryClient.cancelQueries(boardQueryKeys.all);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(boardQueryKeys.all);
+      navigate(`/boards/all`);
+      showDeleteToast();
     },
   });
 }

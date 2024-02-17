@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Root from "./routes/root.tsx";
@@ -22,7 +22,11 @@ const router = createBrowserRouter([
   // },
   {
     path: "/",
-    element: <Root />,
+    element: (
+      <Suspense fallback={<p>Suspense</p>}>
+        <Root />
+      </Suspense>
+    ),
     children: [
       {
         index: true,

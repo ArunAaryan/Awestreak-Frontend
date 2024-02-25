@@ -18,10 +18,11 @@ import {
 } from "@radix-ui/react-popover";
 import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import { DialogHeader } from "@/components/ui/dialog";
+import Loader from "@/components/ui/Loader";
 
 // there is a hook problem useRequestProcessor() cannot be used; change this
 const BoardDetail = () => {
-  const { data: board } = useGetBoardDetail();
+  const { data: board, isLoading } = useGetBoardDetail();
   console.log(board?.name, "boardName");
 
   const joinBoard = useJoinBoard();
@@ -46,6 +47,8 @@ const BoardDetail = () => {
     (user) => user === userId,
   );
   const isCurrentUserBoardAdmin = userId === board?.userId;
+  if (isLoading) return <Loader />;
+
   return (
     <Suspense fallback={<div className=""> suspense</div>}>
       <Dialog>
@@ -78,7 +81,7 @@ const BoardDetail = () => {
                       )}
                       {getUserJoinStatus && (
                         <button
-                          className="flex text-gray-50 text-xs border-2 border-gray-100 px-2 my-1.5 py-0.5 rounded-md max-w-min opacity-100"
+                          className="flex text-gray-50 text-xs border border-gray-100 px-2 my-1.5 py-0.5 rounded-md max-w-min opacity-100"
                           onClick={() => leaveBoard.mutate(board?.id)}
                         >
                           leave

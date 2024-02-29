@@ -1,12 +1,11 @@
-import { useQuery } from "react-query";
-import { useLoaderData, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserView from "./UserView";
 import {
-  deleteBoard,
   useDeleteBoard,
   useGetBoardDetail,
   useJoinBoard,
   useLeaveBoard,
+  useUpdateStreak,
 } from "@/api/boards/boards-api";
 import { IBoardProps, IStreak, IUser } from "@/api/boards/boards.types";
 import { Suspense, useContext } from "react";
@@ -19,6 +18,7 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import { DialogHeader } from "@/components/ui/dialog";
 import Loader from "@/components/ui/Loader";
+import { Button } from "@/components/ui/button";
 
 // there is a hook problem useRequestProcessor() cannot be used; change this
 const BoardDetail = () => {
@@ -29,6 +29,7 @@ const BoardDetail = () => {
 
   const leaveBoard = useLeaveBoard();
 
+  const updateStreak = useUpdateStreak()
   const userCount = board?.Streak?.length ?? 0;
   const getUsers = (streakArray: Array<IStreak>) => {
     let users: Array<IUser> = [];
@@ -43,8 +44,8 @@ const BoardDetail = () => {
   };
   // put this in useCallback
   const userId = useContext(userContext);
-  const getUserJoinStatus = board?.Streak?.map((user) => user.userId).find(
-    (user) => user === userId,
+  const getUserJoinStatus = board?.Streak?.find(
+    (streak) => streak.userId === userId,
   );
   const isCurrentUserBoardAdmin = userId === board?.userId;
   if (isLoading) return <Loader />;
@@ -115,6 +116,16 @@ const BoardDetail = () => {
                   </div>
                 </div>
               </div>
+              {getUserJoinStatus && (
+                <div className="flex mt-4 justify-end">
+                  <button
+                    className="inline-flex  flex-nowrap text-gray-50 text-xs border border-gray-100 px-2  py-1.5 rounded-md  opacity-100 hover:border-gray-500"
+                    onClick={() => updateStreak.mutate(getUserJoinStatus?.id)}
+                  >
+                    Mark Streak
+                  </button>
+                </div>
+              )}
               <div>
                 {board?.Streak && board?.Streak?.length > 0 && (
                   <UserView users={getUsers(board.Streak) ?? []}></UserView>

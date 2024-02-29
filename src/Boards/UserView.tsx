@@ -1,5 +1,5 @@
+import { IUser } from "@/api/boards/boards.types";
 import React from "react";
-import { IUser } from "@/types";
 interface IUserProps {
   users?: Array<IUser>;
 }

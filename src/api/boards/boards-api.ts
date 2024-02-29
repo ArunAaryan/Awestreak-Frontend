@@ -210,3 +210,27 @@ export function useDeleteBoard() {
     },
   });
 }
+export const updateStreak = async (boardId: string, streakId: string) => {
+  const res = await axiosClient.put(`/boards/${boardId}/updateStreak`, {
+    streakId
+  });
+  return res.data;
+}
+export function useUpdateStreak() {
+  const { id: boardId } = useParams<{ id: string }>();
+  if (!boardId) {
+    throw new Error("Board ID is not provided.");
+  }
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn:(streakId: string) => updateStreak(boardId, streakId),
+    onMutate: () => {
+      queryClient.cancelQueries(boardQueryKeys.detail(boardId));
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(boardQueryKeys.detail(boardId), data);
+    }
+  })
+}

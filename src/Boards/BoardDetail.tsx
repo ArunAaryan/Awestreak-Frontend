@@ -8,19 +8,18 @@ import {
   useUpdateStreak,
 } from "@/api/boards/boards-api";
 import { IBoardProps, IStreak, IUser } from "@/api/boards/boards.types";
-import { Suspense, useContext } from "react";
+import { Suspense, useCallback, useContext, useMemo, useState } from "react";
 import { userContext } from "@/routes/UserContext";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
-import { DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import Loader from "@/components/ui/Loader";
-import { Button } from "@/components/ui/button";
-
+import { checkIfLessThanOrEqualToYesterday } from "@/api/boards/boards.utils";
 // there is a hook problem useRequestProcessor() cannot be used; change this
+import { twMerge } from "tailwind-merge";
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
   console.log(board?.name, "boardName");
@@ -29,44 +28,68 @@ const BoardDetail = () => {
 
   const leaveBoard = useLeaveBoard();
 
-  const updateStreak = useUpdateStreak()
+  const updateStreak = useUpdateStreak();
   const userCount = board?.Streak?.length ?? 0;
-  const getUsers = (streakArray: Array<IStreak>) => {
-    let users: Array<IUser> = [];
-    streakArray.forEach((streak) => {
-      if (streak?.User) {
-        let user = streak?.User;
-        user.current_streak = streak?.current_streak ?? 0;
-        users.push(user);
-      }
-    });
-    return users;
-  };
+  const getUsers = useCallback(
+    (streakArray: Array<IStreak>) => {
+      let users: Array<IUser> = [];
+      streakArray.forEach((streak) => {
+        if (streak?.User) {
+          let user = streak?.User;
+          user.current_streak = streak?.current_streak ?? 0;
+          users.push(user);
+        }
+      });
+      return users;
+    },
+    [board?.Streak]
+  );
+
   // put this in useCallback
   const userId = useContext(userContext);
-  const getUserJoinStatus = board?.Streak?.find(
-    (streak) => streak.userId === userId,
-  );
-  const isCurrentUserBoardAdmin = userId === board?.userId;
-  if (isLoading) return <Loader />;
+  const getUserJoinStatus = useMemo(() => {
+    return board?.Streak?.find((streak) => streak.userId === userId);
+  }, [board, userId]);
 
+  const isCurrentUserBoardAdmin = userId === board?.userId;
+  const [interactiveDescription, setInteractiveDescription] = useState(false);
+  if (isLoading) return <Loader />;
+  // if getUserJoinStatus?.update_at is less than today, show Mark Streak button
+
+  const showMarkStreak =
+    getUserJoinStatus?.updated_at &&
+    checkIfLessThanOrEqualToYesterday(getUserJoinStatus.updated_at);
+  console.log(getUserJoinStatus?.updated_at, showMarkStreak);
   return (
     <Suspense fallback={<div className=""> suspense</div>}>
       <Dialog>
         <div className="">
           {board && (
             <>
-              <div className="relative h-[20vh] w-[100%] rounded-md transition-all duration-1000 ease-in-out">
+              <div
+                className={twMerge(
+                  "relative h-[18vh] w-[100%] rounded-md transition-all duration-300 ease-in-out ",
+                  interactiveDescription ? "h-[25vh]" : ""
+                )}
+              >
                 <img
                   src={board?.image}
                   alt="Background"
-                  className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-in-out"
-                  style={{ filter: "blur(2px) brightness(0.6)" }}
+                  className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-300 ease-in-out"
+                  style={{ filter: "blur(3px) brightness(0.4)" }}
                 />
                 <div className="absolute top-0 left-0 h-[100%] w-[100%] flex  justify-between p-2 gap-2">
                   <div className="flex flex-col justify-end">
                     <h2 className="text-gray-100 text-lg">{board?.name}</h2>
-                    <h2 className="text-gray-100 opacity-40 text-xs">
+                    <h2
+                      className={twMerge(
+                        "text-gray-100 opacity-60 text-xs hover:cursor-pointer ",
+                        interactiveDescription ? "" : "line-clamp-4"
+                      )}
+                      onClick={() =>
+                        setInteractiveDescription(!interactiveDescription)
+                      }
+                    >
                       {board?.description}
                     </h2>
                   </div>
@@ -74,7 +97,7 @@ const BoardDetail = () => {
                     <div>
                       {!getUserJoinStatus && (
                         <button
-                          className="flex text-gray-100 text-xs border border-gray-100 px-2 my-1 py-0.5 rounded-md max-w-min"
+                          className="flex text-gray-100 text-xs border border-gray-100 px-2 my-1 py-1 rounded-md max-w-min hover:border-gray-500"
                           onClick={() => joinBoard.mutate(board?.id)}
                         >
                           join
@@ -82,7 +105,7 @@ const BoardDetail = () => {
                       )}
                       {getUserJoinStatus && (
                         <button
-                          className="flex text-gray-50 text-xs border border-gray-100 px-2 my-1.5 py-0.5 rounded-md max-w-min opacity-100"
+                          className="flex text-gray-100 text-xs border border-gray-100 px-2 my-1.5 py-1 rounded-md max-w-min opacity-100 hover:border-gray-500"
                           onClick={() => leaveBoard.mutate(board?.id)}
                         >
                           leave
@@ -93,7 +116,7 @@ const BoardDetail = () => {
                         <Popover>
                           <PopoverTrigger>
                             <p
-                              className="text-gray-50 text-xs border border-gray-100 px-2 my-1.5 py-1 rounded-md max-w-min"
+                              className="text-gray-50 text-xs border border-gray-100 px-2 my-1.5 py-1 rounded-md max-w-min hover:border-gray-500"
                               tabIndex={-1}
                             >
                               manage
@@ -116,7 +139,7 @@ const BoardDetail = () => {
                   </div>
                 </div>
               </div>
-              {getUserJoinStatus && (
+              {getUserJoinStatus && showMarkStreak && (
                 <div className="flex mt-4 justify-end">
                   <button
                     className="inline-flex  flex-nowrap text-gray-50 text-xs border border-gray-100 px-2  py-1.5 rounded-md  opacity-100 hover:border-gray-500"

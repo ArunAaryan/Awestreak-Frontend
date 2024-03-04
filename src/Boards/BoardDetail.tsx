@@ -42,7 +42,7 @@ const BoardDetail = () => {
       });
       return users;
     },
-    [board?.Streak]
+    [board?.Streak],
   );
 
   // put this in useCallback
@@ -69,7 +69,7 @@ const BoardDetail = () => {
               <div
                 className={twMerge(
                   "relative h-[18vh] w-[100%] rounded-md transition-all duration-300 ease-in-out ",
-                  interactiveDescription ? "h-[25vh]" : ""
+                  interactiveDescription ? "h-[25vh]" : "",
                 )}
               >
                 <img
@@ -84,7 +84,7 @@ const BoardDetail = () => {
                     <h2
                       className={twMerge(
                         "text-gray-100 opacity-60 text-xs hover:cursor-pointer ",
-                        interactiveDescription ? "" : "line-clamp-4"
+                        interactiveDescription ? "" : "line-clamp-4",
                       )}
                       onClick={() =>
                         setInteractiveDescription(!interactiveDescription)
@@ -129,9 +129,11 @@ const BoardDetail = () => {
                       )}
                     </div>
                     <div className="flex flex-col justify-end">
-                      <p className="text-gray-100 text-xs opacity-4">
-                        {userCount} users
-                      </p>
+                      {userCount > 0 && (
+                        <p className="text-gray-100 text-xs opacity-4">
+                          {userCount > 1 ? userCount + " users" : "1 user"}
+                        </p>
+                      )}
                       <p className="text-gray-100 text-xs opacity-4">
                         {new Date(board.created_at).toDateString()}
                       </p>

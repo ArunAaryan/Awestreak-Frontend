@@ -13,7 +13,6 @@ import { IBoardProps, IStreak } from "./boards.types";
 import { toast } from "sonner";
 export const staleTime = Infinity;
 export const getBoardById = async (id: string) => {
-  console.log(id, "id getBoardById");
   const res = await axiosClient.get(`/boards/${id}?includeStreak=true`);
   return res.data;
 };
@@ -41,7 +40,6 @@ export function getAllBoardsQuery() {
   };
 }
 export function getBoardDetailQuery(id: string) {
-  console.log(id, "id getBoardDetailQuery");
   return {
     queryKey: boardQueryKeys.detail(id),
     queryFn: () => getBoardById(id),
@@ -76,7 +74,6 @@ export function useGetBoardDetail() {
   });
 }
 export const boardListLoaderAll = (queryClient: QueryClient) => () => {
-  console.log("boardlistall all");
   return queryClient.fetchQuery({
     ...getAllBoardsQuery(),
     staleTime: 1000 * 60 * 2,
@@ -84,7 +81,6 @@ export const boardListLoaderAll = (queryClient: QueryClient) => () => {
 };
 
 export const boardListLoaderMy = (queryClient: QueryClient) => () => {
-  console.log("boardListmy loader");
   return queryClient.fetchQuery({
     ...getMyBoardsQuery(),
     staleTime: 1000 * 60 * 2,
@@ -123,7 +119,6 @@ export function useJoinBoard() {
   return useMutation({
     mutationFn: joinBoard,
     onMutate: async (boardDetail) => {
-      console.log(boardDetail, "boardDetail onMutate");
       await queryClient.cancelQueries(boardQueryKeys.all);
       await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
     },
@@ -148,7 +143,6 @@ export function useLeaveBoard() {
   return useMutation({
     mutationFn: leaveBoard,
     onMutate: async (boardDetail) => {
-      console.log(boardDetail, "boardDetail onMutate");
       await queryClient.cancelQueries(boardQueryKeys.all);
       await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
     },

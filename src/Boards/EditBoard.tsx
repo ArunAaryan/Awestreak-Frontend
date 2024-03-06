@@ -11,7 +11,6 @@ export interface IBoardInput {
 }
 const EditBoard = () => {
   const getBoard = useGetBoardDetail();
-  console.log(getBoard.data, "getBoard");
   const { register, handleSubmit, watch, formState, setValue } =
     useForm<IBoardProps>({});
   useEffect(() => {

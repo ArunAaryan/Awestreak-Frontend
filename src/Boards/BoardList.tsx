@@ -33,11 +33,9 @@ const BoardList = () => {
     ReturnType<ReturnType<typeof boardListLoaderAll>>
   >;
   const myBoards = window.location.href.includes("/boards/my") ? true : false;
-  console.log(myBoards, "myBoards");
   const { data: boards } = !myBoards
     ? useGetAllBoards(initialData2)
     : useGetMyBoards(initialData);
-  console.log(boards, "boards");
 
   if (boards) {
     return (

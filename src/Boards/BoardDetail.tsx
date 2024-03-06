@@ -22,7 +22,6 @@ import { checkIfLessThanOrEqualToYesterday } from "@/api/boards/boards.utils";
 import { twMerge } from "tailwind-merge";
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
-  console.log(board?.name, "boardName");
 
   const joinBoard = useJoinBoard();
 
@@ -42,7 +41,7 @@ const BoardDetail = () => {
       });
       return users;
     },
-    [board?.Streak],
+    [board?.Streak]
   );
 
   // put this in useCallback
@@ -59,7 +58,6 @@ const BoardDetail = () => {
   const showMarkStreak =
     getUserJoinStatus?.updated_at &&
     checkIfLessThanOrEqualToYesterday(getUserJoinStatus.updated_at);
-  console.log(getUserJoinStatus?.updated_at, showMarkStreak);
   return (
     <Suspense fallback={<div className=""> suspense</div>}>
       <Dialog>
@@ -69,7 +67,7 @@ const BoardDetail = () => {
               <div
                 className={twMerge(
                   "relative h-[18vh] w-[100%] rounded-md transition-all duration-300 ease-in-out ",
-                  interactiveDescription ? "h-[25vh]" : "",
+                  interactiveDescription ? "h-[25vh]" : ""
                 )}
               >
                 <img
@@ -84,7 +82,7 @@ const BoardDetail = () => {
                     <h2
                       className={twMerge(
                         "text-gray-100 opacity-60 text-xs hover:cursor-pointer ",
-                        interactiveDescription ? "" : "line-clamp-4",
+                        interactiveDescription ? "" : "line-clamp-4"
                       )}
                       onClick={() =>
                         setInteractiveDescription(!interactiveDescription)

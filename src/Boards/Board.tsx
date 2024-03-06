@@ -9,7 +9,6 @@ const Board: React.FC<IBoardProps> = ({
   image,
   description,
 }) => {
-  console.log(description);
   return (
     <Link to={`/boards/${id}`}>
       <div className="flex justify-start items-center gap-2 py-3  md:hover:border-2 border-opacity-30 rounded-xl border-gray-600 md:hover:px-4 transition-all duration-300 ease-in-out">

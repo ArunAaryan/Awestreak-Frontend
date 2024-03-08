@@ -20,6 +20,19 @@ import Loader from "@/components/ui/Loader";
 import { checkIfLessThanOrEqualToYesterday } from "@/api/boards/boards.utils";
 // there is a hook problem useRequestProcessor() cannot be used; change this
 import { twMerge } from "tailwind-merge";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import LogStreakDrawer from "./LogStreakDrawer";
+
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
 
@@ -29,6 +42,7 @@ const BoardDetail = () => {
 
   const updateStreak = useUpdateStreak();
   const userCount = board?.Streak?.length ?? 0;
+  const [showLog, setShowLog] = useState(false);
   const getUsers = useCallback(
     (streakArray: Array<IStreak>) => {
       let users: Array<IUser> = [];
@@ -139,16 +153,7 @@ const BoardDetail = () => {
                   </div>
                 </div>
               </div>
-              {getUserJoinStatus && showMarkStreak && (
-                <div className="flex mt-4 justify-end">
-                  <button
-                    className="inline-flex  flex-nowrap text-gray-50 text-xs border border-gray-100 px-2  py-1.5 rounded-md  opacity-100 hover:border-gray-500"
-                    onClick={() => updateStreak.mutate(getUserJoinStatus?.id)}
-                  >
-                    Mark Streak
-                  </button>
-                </div>
-              )}
+              {getUserJoinStatus && showMarkStreak && <LogStreakDrawer />}
               <div>
                 {board?.Streak && board?.Streak?.length > 0 && (
                   <UserView users={getUsers(board.Streak) ?? []}></UserView>

@@ -54,11 +54,7 @@ const NewBoard = () => {
           <Controller
             control={control}
             name="period"
-            render={({
-              field: { onChange, onBlur, value, name, ref },
-              fieldState: { invalid, isTouched, isDirty, error },
-              formState,
-            }) => (
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
               <Select onValueChange={onChange}>
                 <SelectTrigger className="w-40">
                   <SelectValue
@@ -66,7 +62,7 @@ const NewBoard = () => {
                     defaultValue={"everyday"}
                     itemType="text"
                   >
-                    {value?.toLowerCase()}
+                    {value}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>

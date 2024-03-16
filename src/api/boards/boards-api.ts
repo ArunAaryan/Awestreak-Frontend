@@ -9,7 +9,7 @@ import {
 import { boardQueryKeys } from "./boards.keys";
 import { useNavigate, useParams } from "react-router-dom";
 import { IBoardInput } from "@/Boards/NewBoard";
-import { IBoardProps, IStreak } from "./boards.types";
+import { IBoardProps, ILog, IStreak } from "./boards.types";
 import { toast } from "sonner";
 export const staleTime = Infinity;
 export const getBoardById = async (id: string) => {
@@ -125,7 +125,7 @@ export function useJoinBoard() {
     onSuccess: async (boardDetail) => {
       await queryClient.setQueryData(
         boardQueryKeys.detail(boardDetail.id),
-        boardDetail,
+        boardDetail
       );
     },
   });
@@ -149,7 +149,7 @@ export function useLeaveBoard() {
     onSuccess: async (boardDetail) => {
       await queryClient.setQueryData(
         boardQueryKeys.detail(boardDetail.id),
-        boardDetail,
+        boardDetail
       );
     },
   });
@@ -206,10 +206,10 @@ export function useDeleteBoard() {
 }
 export const updateStreak = async (boardId: string, streakId: string) => {
   const res = await axiosClient.put(`/boards/${boardId}/updateStreak`, {
-    streakId
+    streakId,
   });
   return res.data;
-}
+};
 export function useUpdateStreak() {
   const { id: boardId } = useParams<{ id: string }>();
   if (!boardId) {
@@ -219,12 +219,35 @@ export function useUpdateStreak() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn:(streakId: string) => updateStreak(boardId, streakId),
+    mutationFn: (streakId: string) => updateStreak(boardId, streakId),
     onMutate: () => {
       queryClient.cancelQueries(boardQueryKeys.detail(boardId));
     },
     onSuccess: (data) => {
       queryClient.setQueryData(boardQueryKeys.detail(boardId), data);
-    }
-  })
+    },
+  });
+}
+
+export const createLog = async (boardId: string, logData: ILog) => {
+  const res = await axiosClient.post(`/boards/${boardId}/logs`, logData);
+  return res.data;
+};
+
+export function useCreateLog() {
+  const { id: boardId } = useParams<{ id: string }>();
+  if (!boardId) {
+    throw new Error("Board ID is not provided.");
+  }
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (logData: ILog) => createLog(boardId, logData),
+    onMutate: () => {
+      queryClient.cancelQueries(boardQueryKeys.detail(boardId));
+      queryClient.invalidateQueries(boardQueryKeys.detail(boardId));
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(boardQueryKeys.detail(boardId), data);
+    },
+  });
 }

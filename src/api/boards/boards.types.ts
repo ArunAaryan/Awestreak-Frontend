@@ -25,3 +25,10 @@ export interface IUser {
   name: string;
   current_streak?: Number;
 }
+
+export interface ILog {
+  description?: string;
+  image?: string;
+  boardId: string;
+  streakId: string;
+}

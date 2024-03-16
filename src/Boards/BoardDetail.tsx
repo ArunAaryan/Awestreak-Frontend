@@ -40,9 +40,7 @@ const BoardDetail = () => {
 
   const leaveBoard = useLeaveBoard();
 
-  const updateStreak = useUpdateStreak();
   const userCount = board?.Streak?.length ?? 0;
-  const [showLog, setShowLog] = useState(false);
   const getUsers = useCallback(
     (streakArray: Array<IStreak>) => {
       let users: Array<IUser> = [];
@@ -60,7 +58,7 @@ const BoardDetail = () => {
 
   // put this in useCallback
   const userId = useContext(userContext);
-  const getUserJoinStatus = useMemo(() => {
+  const userStreak = useMemo(() => {
     return board?.Streak?.find((streak) => streak.userId === userId);
   }, [board, userId]);
 
@@ -70,8 +68,8 @@ const BoardDetail = () => {
   // if getUserJoinStatus?.update_at is less than today, show Mark Streak button
 
   const showMarkStreak =
-    getUserJoinStatus?.updated_at &&
-    checkIfLessThanOrEqualToYesterday(getUserJoinStatus.updated_at);
+    userStreak?.updated_at &&
+    checkIfLessThanOrEqualToYesterday(userStreak.updated_at);
   return (
     <Suspense fallback={<div className=""> suspense</div>}>
       <Dialog>
@@ -107,7 +105,7 @@ const BoardDetail = () => {
                   </div>
                   <div className="flex flex-col items-end justify-between whitespace-nowrap">
                     <div>
-                      {!getUserJoinStatus && (
+                      {!userStreak && (
                         <button
                           className="flex text-gray-100 text-xs border border-gray-100 px-2 my-1 py-1 rounded-md max-w-min hover:border-gray-500"
                           onClick={() => joinBoard.mutate(board?.id)}
@@ -115,7 +113,7 @@ const BoardDetail = () => {
                           join
                         </button>
                       )}
-                      {getUserJoinStatus && (
+                      {userStreak && (
                         <button
                           className="flex text-gray-100 text-xs border border-gray-100 px-2 my-1.5 py-1 rounded-md max-w-min opacity-100 hover:border-gray-500"
                           onClick={() => leaveBoard.mutate(board?.id)}
@@ -153,7 +151,9 @@ const BoardDetail = () => {
                   </div>
                 </div>
               </div>
-              {getUserJoinStatus && showMarkStreak && <LogStreakDrawer />}
+              {userStreak && showMarkStreak && (
+                <LogStreakDrawer userStreak={userStreak}></LogStreakDrawer>
+              )}
               <div>
                 {board?.Streak && board?.Streak?.length > 0 && (
                   <UserView users={getUsers(board.Streak) ?? []}></UserView>

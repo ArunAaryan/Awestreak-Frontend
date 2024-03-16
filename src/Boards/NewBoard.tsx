@@ -23,9 +23,9 @@ const NewBoard = () => {
   const { register, handleSubmit, watch, formState, control } =
     useForm<IBoardInput>();
 
-  const createUser = useCreateBoard();
+  const createBoard = useCreateBoard();
   const onSubmit: SubmitHandler<IBoardInput> = (data) => {
-    createUser.mutate(data);
+    createBoard.mutate(data);
   };
   const currentPeriod = watch("period");
   return (

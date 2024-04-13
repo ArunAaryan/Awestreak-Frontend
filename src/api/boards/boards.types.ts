@@ -31,4 +31,5 @@ export interface ILog {
   image?: string;
   boardId: string;
   streakId: string;
+  created_at: string;
 }

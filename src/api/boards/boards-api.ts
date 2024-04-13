@@ -251,3 +251,22 @@ export function useCreateLog() {
     },
   });
 }
+
+export const getLogs = async (streakId: string) => {
+  const res = await axiosClient.get(`/logs/${streakId}`);
+  return res.data;
+};
+
+export function useGetLogs(streakId: string) {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryKey: ["logs", streakId],
+    queryFn: async () => {
+      return getLogs(streakId);
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["logs"], data);
+    },
+    enabled: false,
+  });
+}

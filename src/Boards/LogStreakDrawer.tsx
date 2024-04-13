@@ -40,14 +40,14 @@ const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
   return (
     <div className="flex mt-4 justify-end ">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger>
-          <button
-            className="inline-flex  flex-nowrap text-gray-50 text-xs border border-gray-100 px-2  py-1.5 rounded-md  opacity-100 hover:border-gray-500"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            Log Streak
-          </button>
-        </DialogTrigger>
+        {/* <DialogTrigger> */}
+        <button
+          className="inline-flex  flex-nowrap text-gray-50 text-xs border border-gray-100 px-2  py-1.5 rounded-md  opacity-100 hover:border-gray-500"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Log Streak
+        </button>
+        {/* </DialogTrigger> */}
         <DialogContent className="flex md:justify-center md:items-center w-full">
           <form
             onSubmit={handleSubmit(onSubmit)}

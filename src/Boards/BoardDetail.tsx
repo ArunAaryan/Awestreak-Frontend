@@ -1,14 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import UserView from "./UserView";
 import {
+  getLogs,
   useDeleteBoard,
   useGetBoardDetail,
   useJoinBoard,
   useLeaveBoard,
-  useUpdateStreak,
 } from "@/api/boards/boards-api";
-import { IBoardProps, IStreak, IUser } from "@/api/boards/boards.types";
-import { Suspense, useCallback, useContext, useMemo, useState } from "react";
+import { IBoardProps, ILog, IStreak, IUser } from "@/api/boards/boards.types";
+import {
+  Suspense,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { userContext } from "@/routes/UserContext";
 import {
   Popover,
@@ -20,19 +27,8 @@ import Loader from "@/components/ui/Loader";
 import { checkIfLessThanOrEqualToYesterday } from "@/api/boards/boards.utils";
 // there is a hook problem useRequestProcessor() cannot be used; change this
 import { twMerge } from "tailwind-merge";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
 import LogStreakDrawer from "./LogStreakDrawer";
-
+import LogListDrawer from "./LogListDrawer";
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
 
@@ -64,12 +60,12 @@ const BoardDetail = () => {
 
   const isCurrentUserBoardAdmin = userId === board?.userId;
   const [interactiveDescription, setInteractiveDescription] = useState(false);
-  if (isLoading) return <Loader />;
-  // if getUserJoinStatus?.update_at is less than today, show Mark Streak button
 
   const showMarkStreak =
     userStreak?.updated_at &&
     checkIfLessThanOrEqualToYesterday(userStreak.updated_at);
+
+  if (isLoading) return <Loader />;
   return (
     <Suspense fallback={<div className=""> suspense</div>}>
       <Dialog>
@@ -159,6 +155,7 @@ const BoardDetail = () => {
                   <UserView users={getUsers(board.Streak) ?? []}></UserView>
                 )}
               </div>
+              <LogListDrawer streakId={userStreak?.id || ""} />
             </>
           )}
         </div>

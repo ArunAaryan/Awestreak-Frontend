@@ -27,6 +27,24 @@ const Root = () => {
     };
     const getTokenFromParams = async () => {
       const token = await localStorage.getItem("currentUser");
+      if (token) {
+        try {
+          const res = await axiosClient.get(`${API_URL}/auth/user`, {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          });
+          if (res.status == 200) {
+            getUserData(token);
+          }
+        } catch (error: any) {
+          console.log(error);
+          if (error.response.status == 401) {
+            await localStorage.removeItem("currentUser");
+            window.location.href = "/";
+          }
+        }
+      }
       if (!token) {
         window.location.href = `${API_URL}/auth/google`;
         const access_token = await searchParams.get("access_token");
@@ -36,7 +54,7 @@ const Root = () => {
           await getUserData(access_token);
         }
       }
-      if (token) await getUserData(token);
+      // if (token) await getUserData(token);
     };
     getTokenFromParams();
   }, []);

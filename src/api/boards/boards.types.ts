@@ -27,6 +27,7 @@ export interface IUser {
 }
 
 export interface ILog {
+  id?: string;
   description?: string;
   image?: string;
   boardId: string;

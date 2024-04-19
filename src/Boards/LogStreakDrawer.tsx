@@ -30,7 +30,6 @@ const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const onSubmit: SubmitHandler<ILog> = (data) => {
     // createUser.mutate(data);: streakId
-    console.log(data, "log data");
     data = { ...data, streakId };
     createLog.mutate(data, {
       onError: () => setIsDialogOpen(false),
@@ -38,7 +37,7 @@ const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
     });
   };
   return (
-    <div className="flex mt-4 justify-end ">
+    <div className="flex justify-end ">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         {/* <DialogTrigger> */}
         <button

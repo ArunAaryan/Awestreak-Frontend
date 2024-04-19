@@ -1,21 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import UserView from "./UserView";
+import UserView, { UserViewRow } from "./UserView";
 import {
-  getLogs,
   useDeleteBoard,
   useGetBoardDetail,
   useJoinBoard,
   useLeaveBoard,
 } from "@/api/boards/boards-api";
-import { IBoardProps, ILog, IStreak, IUser } from "@/api/boards/boards.types";
-import {
-  Suspense,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { IBoardProps, IStreak, IUser } from "@/api/boards/boards.types";
+import { Suspense, useCallback, useContext, useMemo, useState } from "react";
 import { userContext } from "@/routes/UserContext";
 import {
   Popover,
@@ -24,11 +16,8 @@ import {
 } from "@radix-ui/react-popover";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import Loader from "@/components/ui/Loader";
-import { checkIfLessThanOrEqualToYesterday } from "@/api/boards/boards.utils";
 // there is a hook problem useRequestProcessor() cannot be used; change this
 import { twMerge } from "tailwind-merge";
-import LogStreakDrawer from "./LogStreakDrawer";
-import LogListDrawer from "./LogListDrawer";
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
 
@@ -37,14 +26,21 @@ const BoardDetail = () => {
   const leaveBoard = useLeaveBoard();
 
   const userCount = board?.Streak?.length ?? 0;
+
+  const userId = useContext(userContext);
+
   const getUsers = useCallback(
     (streakArray: Array<IStreak>) => {
       let users: Array<IUser> = [];
       streakArray.forEach((streak) => {
         if (streak?.User) {
-          let user = streak?.User;
-          user.current_streak = streak?.current_streak ?? 0;
-          users.push(user);
+          if (streak?.User.id === userId) {
+            // continue
+          } else {
+            let user = streak?.User;
+            user.current_streak = streak?.current_streak ?? 0;
+            users.push(user);
+          }
         }
       });
       return users;
@@ -53,17 +49,12 @@ const BoardDetail = () => {
   );
 
   // put this in useCallback
-  const userId = useContext(userContext);
   const userStreak = useMemo(() => {
     return board?.Streak?.find((streak) => streak.userId === userId);
   }, [board, userId]);
 
   const isCurrentUserBoardAdmin = userId === board?.userId;
   const [interactiveDescription, setInteractiveDescription] = useState(false);
-
-  const showMarkStreak =
-    userStreak?.updated_at &&
-    checkIfLessThanOrEqualToYesterday(userStreak.updated_at);
 
   if (isLoading) return <Loader />;
   return (
@@ -147,15 +138,18 @@ const BoardDetail = () => {
                   </div>
                 </div>
               </div>
-              {userStreak && showMarkStreak && (
+              {/* {userStreak && showMarkStreak && (
                 <LogStreakDrawer userStreak={userStreak}></LogStreakDrawer>
-              )}
+              )} */}
               <div>
+                {userStreak && (
+                  <UserViewRow user={userStreak.User} userStreak={userStreak} />
+                )}
                 {board?.Streak && board?.Streak?.length > 0 && (
                   <UserView users={getUsers(board.Streak) ?? []}></UserView>
                 )}
               </div>
-              <LogListDrawer streakId={userStreak?.id || ""} />
+              {/* <LogListDrawer streakId={userStreak?.id || ""} /> */}
             </>
           )}
         </div>

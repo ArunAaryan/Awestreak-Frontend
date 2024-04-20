@@ -27,6 +27,7 @@ const Root = () => {
     };
     const getTokenFromParams = async () => {
       const token = await localStorage.getItem("currentUser");
+
       if (token) {
         try {
           const res = await axiosClient.get(`${API_URL}/auth/user`, {
@@ -34,28 +35,35 @@ const Root = () => {
               Authorization: "Bearer " + token,
             },
           });
-          if (res.status == 200) {
-            getUserData(token);
+
+          if (res.status === 401) {
+            // 401 Unauthorized - remove token and reauthorize
+            await localStorage.removeItem("currentUser");
+            window.location.href = `${API_URL}/auth/google`;
+          } else {
+            // Successful response - get user details
+            await getUserData(token);
           }
         } catch (error: any) {
           console.log(error);
-          if (error.response.status == 401) {
+          if (error.response.status === 401) {
             await localStorage.removeItem("currentUser");
             window.location.href = "/";
           }
         }
-      }
-      if (!token) {
+      } else {
+        // No token - redirect to authorize
         window.location.href = `${API_URL}/auth/google`;
+
+        // Get new token from params after redirect
         const access_token = await searchParams.get("access_token");
         if (access_token) {
           await localStorage.setItem("currentUser", access_token);
-          window.location.href = "/boards/all";
           await getUserData(access_token);
         }
       }
-      // if (token) await getUserData(token);
     };
+
     getTokenFromParams();
   }, []);
 

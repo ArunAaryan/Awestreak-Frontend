@@ -12,16 +12,16 @@ const axiosClient = axios.create({
     Authorization: "Bearer " + getCurrentUser(),
   },
 });
-axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    console.log("axios error");
-    if (error.response.status === 401) {
-      localStorage.removeItem("currentUser");
-      window.location.href = `${import.meta.env.REACT_APP_API_URL}/auth/google`;
-    }
-  }
-);
+// axiosClient.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     console.log("axios error");
+//     if (error.response.status === 401) {
+//       localStorage.removeItem("currentUser");
+//       window.location.href = `${API_URL}/auth/google`;
+//     }
+//   }
+// );
 export default axiosClient;

@@ -4,12 +4,16 @@ import { Link } from "react-router-dom";
 export interface INavItem {
   link: string;
   name: string;
+  icon?: React.ReactNode;
 }
-const Navitem: React.FC<INavItem> = ({ link, name }) => {
+
+const Navitem: React.FC<INavItem> = ({ link, name, icon }) => {
   return (
     <Link to={link}>
-      <div className="px-2 py-0.5 text-gray-50 border-2 border-gray-100 rounded-md hover:border-gray-700 hover:cursor-pointer">
-        {name}
+      <div className="px-5 py-1 text-gray-50 rounded-md hover:border-gray-200 hover:cursor-pointer flex flex-col justify-center items-center hover:border ">
+        {icon}
+
+        <span className="text-xs ">{name}</span>
       </div>
     </Link>
   );

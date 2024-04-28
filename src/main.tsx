@@ -4,16 +4,16 @@ import "./index.css";
 import Root from "./routes/root.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import BoardDetail from "./Boards/BoardDetail.tsx";
-import { QueryClient } from "react-query";
+// import { QueryClient } from "react-query";
 import NewBoard from "./Boards/NewBoard.tsx";
 import BoardList from "./Boards/BoardList.tsx";
 
-import {
-  boardListLoaderAll,
-  boardListLoaderMy,
-} from "./api/boards/boards-api.ts";
+// import {
+//   boardListLoaderAll,
+//   boardListLoaderMy,
+// } from "./api/boards/boards-api.ts";
 import EditBoard from "./Boards/EditBoard.tsx";
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 const router = createBrowserRouter([
   // {
   //   index: true,
@@ -41,12 +41,12 @@ const router = createBrowserRouter([
       {
         path: "all",
         element: <BoardList />,
-        loader: boardListLoaderAll(queryClient),
+        // loader: boardListLoaderAll(queryClient),
       },
       {
         path: "my",
         element: <BoardList />,
-        loader: boardListLoaderMy(queryClient),
+        // loader: boardListLoaderMy(queryClient),
       },
       {
         element: <BoardDetail />,

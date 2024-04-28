@@ -124,7 +124,7 @@ const Root = () => {
           >
             <QueryClientProvider client={queryClient}>
               <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <div className="flex mx-auto bg-gray-950 min-h-screen justify-center ">
+                <div className="flex mx-auto bg-gray-950 min-h-screen justify-center pt-16">
                   <div className="flex flex-col gap-4 px-4 md:px-10 py-4 bg-gray-950 min-h-screen max-w-2xl justify-start items-stretch flex-1">
                     <Navbar />
                     <Outlet />

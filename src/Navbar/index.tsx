@@ -18,7 +18,7 @@ const index = () => {
   // const { setTheme } = useTheme();
   // const [toggleTheme, setToggleTheme] = useState(true);
   return createPortal(
-    <div className="fixed top-0 left-0 right-0 z-10 bg-gray-900 pt-2 backdrop-blur-md px-2  ">
+    <div className="fixed top-0 left-0 right-0 z-100 pt-2 backdrop-blur-md px-2  ">
       <div className="flex gap-2 mb-2 items-center justify-between md:justify-start md:gap-8 max-w-2xl m-auto">
         {links && links.map((link) => <Navitem {...link} key={link.name} />)}
         {/*   <button */}

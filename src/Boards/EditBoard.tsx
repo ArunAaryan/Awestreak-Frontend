@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { IBoardProps } from "@/api/boards/boards.types";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { loaderContext } from "../LoaderContext";
 export interface IBoardInput {
   name: string;
   description: string;
@@ -22,7 +23,8 @@ const EditBoard = () => {
       });
     }
   }, [board, setValue]);
-  const editUser = useEditBoard();
+  const { setLoading } = useContext(loaderContext);
+  const editUser = useEditBoard(setLoading);
   return (
     <div>
       <form

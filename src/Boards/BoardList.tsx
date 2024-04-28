@@ -47,12 +47,17 @@ const BoardList = () => {
       setLoading(false);
     }
   }, [isLoading]);
-  if (boards) {
+  if (boards && boards.length > 0) {
     return (
       <div className="transition-all duration-500 ease-in-out">
         <BoardList_ boards={boards} />
       </div>
     );
   }
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <p className="text-gray-50 text-xl">You have not joined any board yet!</p>
+    </div>
+  );
 };
 export default BoardList;

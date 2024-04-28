@@ -92,16 +92,20 @@ export const createBoard = async (boardData: IBoardInput) => {
   return res.data;
 };
 
-export function useCreateBoard() {
+export function useCreateBoard(setLoading: (isLoading: boolean) => void) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   return useMutation({
     mutationFn: createBoard,
     onMutate: async () => {
+      setLoading(true);
       await queryClient.cancelQueries(boardQueryKeys.all);
       await queryClient.invalidateQueries(boardQueryKeys.all);
     },
-    onSuccess: (data) => navigate(`/boards/${data.id}`),
+    onSuccess: (data) => {
+      navigate(`/boards/${data.id}`);
+      setLoading(false);
+    },
   });
 }
 
@@ -166,7 +170,7 @@ export const editBoard = async (boardData: IBoardInput) => {
 export const showEditToast = () => toast("Edited Successfully!", {});
 
 export const showDeleteToast = () => toast("Deleted Successfully!", {});
-export function useEditBoard() {
+export function useEditBoard(setLoading: (isLoading: boolean) => void) {
   const { id: boardId } = useParams<{ id: string }>();
   if (!boardId) {
     throw new Error("Board ID is not provided.");
@@ -176,11 +180,13 @@ export function useEditBoard() {
   return useMutation({
     mutationFn: (data: IBoardInput) => editBoard({ id: boardId, ...data }),
     onMutate: () => {
+      setLoading(true);
       queryClient.cancelQueries(boardQueryKeys.all);
     },
     onSuccess: (data, _) => {
       queryClient.invalidateQueries(boardQueryKeys.all);
       navigate(`/boards/${data.id}`);
+      setLoading(false);
       showEditToast();
     },
   });

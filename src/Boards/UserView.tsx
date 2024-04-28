@@ -14,8 +14,9 @@ export const UserViewRow = ({
   userStreak?: IStreak;
 }) => {
   const showMarkStreak =
-    userStreak?.updated_at &&
-    checkIfLessThanOrEqualToYesterday(userStreak.updated_at);
+    (userStreak?.updated_at &&
+      checkIfLessThanOrEqualToYesterday(userStreak.updated_at)) ||
+    userStreak?.current_streak === 0;
   return (
     <div className="flex justify-between items-center">
       <div

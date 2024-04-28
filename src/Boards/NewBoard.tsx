@@ -9,6 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { loaderContext } from "../LoaderContext";
+import { useContext } from "react";
 
 export interface IBoardInput {
   id?: string;
@@ -21,7 +23,8 @@ export interface IBoardInput {
 const NewBoard = () => {
   const { register, handleSubmit, watch, control } = useForm<IBoardInput>();
 
-  const createBoard = useCreateBoard();
+  const { setLoading } = useContext(loaderContext);
+  const createBoard = useCreateBoard(setLoading);
   const onSubmit: SubmitHandler<IBoardInput> = (data) => {
     createBoard.mutate(data);
   };

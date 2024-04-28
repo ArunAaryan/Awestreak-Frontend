@@ -140,9 +140,6 @@ const BoardDetail = () => {
                   </div>
                 </div>
               </div>
-              {/* {userStreak && showMarkStreak && (
-                <LogStreakDrawer userStreak={userStreak}></LogStreakDrawer>
-              )} */}
               <div>
                 {userStreak && (
                   <UserViewRow user={userStreak.User} userStreak={userStreak} />

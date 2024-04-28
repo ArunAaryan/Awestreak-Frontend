@@ -41,7 +41,7 @@ export const UserViewRow = ({
         <div className="flex flex-col gap-0">
           <p className="text-gray-100 text-sm ">{user.name}</p>
           <p className="text-gray-100 text-xs opacity-50 ">
-            {user.current_streak?.toString() ?? 0} days streak
+            {userStreak?.current_streak?.toString() ?? 0} days streak
           </p>
         </div>
       </div>

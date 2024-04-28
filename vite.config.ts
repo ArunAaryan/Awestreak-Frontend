@@ -7,7 +7,7 @@ export const manifest = {
   background_color: "#000000",
   display: "fullscreen",
   scope: "/",
-  start_url: "/",
+  start_url: "/boards/all",
   name: "Awestreak",
   short_name: "Awestreak",
   description: "Public Learning & Streaks",

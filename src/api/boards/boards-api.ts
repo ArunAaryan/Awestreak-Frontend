@@ -10,7 +10,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IBoardInput } from "@/Boards/NewBoard";
 import { IBoardProps, ILog } from "./boards.types";
 import { toast } from "sonner";
-import { set } from "react-hook-form";
 export const staleTime = Infinity;
 
 export const getBoardById = async (id: string) => {

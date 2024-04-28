@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../Navbar/index.tsx";
 import { Outlet, useSearchParams } from "react-router-dom";
 import {
@@ -16,11 +16,47 @@ import { API_URL } from "../../config.ts";
 import ErrorBoundary from "@/ErrorBoundary.tsx";
 import { OverlayLoader } from "../components/ui/Loader.tsx";
 import { loaderContext as LoaderContext } from "../LoaderContext.ts";
-
+import io from "socket.io-client";
+import { boardQueryKeys } from "../api/boards/boards.keys.ts";
+import { toast } from "sonner";
+// import { config } from "process";
 const Root = () => {
   const [searchParams] = useSearchParams();
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
+  // const [socketUrl, setSocketUrl] = useState("wss://localhost:3000");
+
+  useEffect(() => {
+    const socket = io(API_URL);
+
+    socket.on("connect", () => {
+      console.log("Connected to Nestjs websocket server!");
+    });
+
+    socket.on(
+      "update",
+      (message: { type: string; id: string; info?: string }) => {
+        if (message?.info) {
+          toast(message.info);
+        }
+        switch (message.type) {
+          case "board":
+            queryClient.invalidateQueries(boardQueryKeys.detail(message.id));
+            return;
+          case "boards":
+            queryClient.invalidateQueries(boardQueryKeys.all);
+            queryClient.invalidateQueries(boardQueryKeys.my);
+            return;
+          case "default":
+            return;
+        }
+      }
+    );
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   useEffect(() => {
     const getUserData = async (access_token: string) => {
       const res = await axiosClient.get(`${API_URL}/auth/user`, {
@@ -75,6 +111,7 @@ const Root = () => {
 
     getTokenFromParams();
   }, []);
+
   return (
     <QueryErrorResetBoundary>
       <ErrorBoundary>

@@ -4,4 +4,4 @@
 // export const API_URL = "http://100.121.53.124:3000";
 // export const API_URL = "http://127.0.0.1:3000";
 //export const API_URL = "http://aruns-macbook-pro.zapus-boa.ts.net:3000";
-export const API_URL = "https://awestreak-backend.vercel.app/";
+export const API_URL = "https://awestreak-backend.vercel.app";

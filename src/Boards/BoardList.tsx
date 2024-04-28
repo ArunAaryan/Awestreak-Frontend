@@ -6,7 +6,9 @@ import {
   useGetMyBoards,
 } from "@/api/boards/boards-api.ts";
 import { IBoardProps } from "@/api/boards/boards.types.ts";
+import { useContext, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
+import { loaderContext } from "../LoaderContext.ts";
 
 interface IBoardList {
   boards: Array<IBoardProps>;
@@ -26,6 +28,7 @@ const BoardList_: React.FC<IBoardList> = ({ boards }) => {
   );
 };
 const BoardList = () => {
+  const { setLoading } = useContext(loaderContext);
   const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof boardListLoaderMy>>
   >;
@@ -33,10 +36,17 @@ const BoardList = () => {
     ReturnType<ReturnType<typeof boardListLoaderAll>>
   >;
   const myBoards = window.location.href.includes("/boards/my") ? true : false;
-  const { data: boards } = !myBoards
+  const { data: boards, isLoading } = !myBoards
     ? useGetAllBoards(initialData2)
     : useGetMyBoards(initialData);
 
+  useEffect(() => {
+    if (isLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [isLoading]);
   if (boards) {
     return (
       <div className="transition-all duration-500 ease-in-out">

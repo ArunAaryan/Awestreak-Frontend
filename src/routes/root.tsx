@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navbar from "../Navbar/index.tsx";
 import { Outlet, useSearchParams } from "react-router-dom";
 import {
@@ -14,9 +14,13 @@ import { ThemeProvider } from "@/components/theme-provider.tsx";
 import axiosClient from "@/axios.ts";
 import { API_URL } from "../../config.ts";
 import ErrorBoundary from "@/ErrorBoundary.tsx";
+import { OverlayLoader } from "../components/ui/Loader.tsx";
+import { loaderContext as LoaderContext } from "../LoaderContext.ts";
+
 const Root = () => {
   const [searchParams] = useSearchParams();
   const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getUserData = async (access_token: string) => {
       const res = await axiosClient.get(`${API_URL}/auth/user`, {
@@ -71,22 +75,29 @@ const Root = () => {
 
     getTokenFromParams();
   }, []);
-
   return (
     <QueryErrorResetBoundary>
       <ErrorBoundary>
         <UserContext.Provider value={userId ?? ""}>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-              <div className="flex mx-auto bg-gray-950 min-h-screen justify-center ">
-                <div className="flex flex-col gap-4 px-4 md:px-10 py-4 bg-gray-950 min-h-screen max-w-2xl justify-start items-stretch flex-1">
-                  <Navbar />
-                  <Outlet />
-                  <Toaster />
+          <LoaderContext.Provider
+            value={{
+              loading,
+              setLoading,
+            }}
+          >
+            <QueryClientProvider client={queryClient}>
+              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <div className="flex mx-auto bg-gray-950 min-h-screen justify-center ">
+                  <div className="flex flex-col gap-4 px-4 md:px-10 py-4 bg-gray-950 min-h-screen max-w-2xl justify-start items-stretch flex-1">
+                    <Navbar />
+                    <Outlet />
+                    <Toaster />
+                    {loading && <OverlayLoader />}
+                  </div>
                 </div>
-              </div>
-            </ThemeProvider>
-          </QueryClientProvider>
+              </ThemeProvider>
+            </QueryClientProvider>
+          </LoaderContext.Provider>
         </UserContext.Provider>
       </ErrorBoundary>
     </QueryErrorResetBoundary>

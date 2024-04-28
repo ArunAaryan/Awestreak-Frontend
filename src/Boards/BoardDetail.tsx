@@ -18,12 +18,14 @@ import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import Loader from "@/components/ui/Loader";
 // there is a hook problem useRequestProcessor() cannot be used; change this
 import { twMerge } from "tailwind-merge";
+import { loaderContext } from "../LoaderContext";
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
 
-  const joinBoard = useJoinBoard();
+  const { setLoading } = useContext(loaderContext);
+  const joinBoard = useJoinBoard(setLoading);
 
-  const leaveBoard = useLeaveBoard();
+  const leaveBoard = useLeaveBoard(setLoading);
 
   const userCount = board?.Streak?.length ?? 0;
 

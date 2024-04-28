@@ -26,5 +26,15 @@ export const Loader: React.FC<ILoaderProps> = ({
     </div>
   );
 };
+import { createPortal } from "react-dom";
+
+export const OverlayLoader: React.FC<ILoaderProps> = ({ className }) => {
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 transition duration-1000 ease-in-out">
+      <Loader className={className} />
+    </div>,
+    document.body
+  );
+};
 
 export default Loader;

@@ -10,7 +10,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IBoardInput } from "@/Boards/NewBoard";
 import { IBoardProps, ILog } from "./boards.types";
 import { toast } from "sonner";
+import { set } from "react-hook-form";
 export const staleTime = Infinity;
+
 export const getBoardById = async (id: string) => {
   const res = await axiosClient.get(`/boards/${id}?includeStreak=true`);
   return res.data;
@@ -109,7 +111,7 @@ export const joinBoard = async (boardId: string) => {
   return res.data;
 };
 
-export function useJoinBoard() {
+export function useJoinBoard(setLoading: (isLoading: boolean) => void) {
   const { id: boardId } = useParams<{ id: string }>();
   if (!boardId) {
     throw new Error("Board ID is not provided.");
@@ -118,10 +120,12 @@ export function useJoinBoard() {
   return useMutation({
     mutationFn: joinBoard,
     onMutate: async () => {
+      setLoading(true);
       await queryClient.cancelQueries(boardQueryKeys.all);
       await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
     },
     onSuccess: async (boardDetail) => {
+      setLoading(false);
       await queryClient.setQueryData(
         boardQueryKeys.detail(boardDetail.id),
         boardDetail
@@ -133,7 +137,7 @@ export const leaveBoard = async (boardId: string) => {
   const res = await axiosClient.delete(`boards/${boardId}/join`);
   return res.data;
 };
-export function useLeaveBoard() {
+export function useLeaveBoard(setLoading: (isLoading: boolean) => void) {
   const { id: boardId } = useParams<{ id: string }>();
   if (!boardId) {
     throw new Error("Board ID is not provided.");
@@ -142,6 +146,7 @@ export function useLeaveBoard() {
   return useMutation({
     mutationFn: leaveBoard,
     onMutate: async () => {
+      setLoading(true);
       await queryClient.cancelQueries(boardQueryKeys.all);
       await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
     },
@@ -150,6 +155,7 @@ export function useLeaveBoard() {
         boardQueryKeys.detail(boardDetail.id),
         boardDetail
       );
+      await setLoading(false);
     },
   });
 }

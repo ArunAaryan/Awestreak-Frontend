@@ -1,18 +1,13 @@
-import { useCreateLog, useUpdateStreak } from "@/api/boards/boards-api";
+import { useCreateLog } from "@/api/boards/boards-api";
 import { ILog, IStreak } from "@/api/boards/boards.types";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { get } from "http";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -23,9 +18,8 @@ interface ILogStreakDialogProps {
 const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
   userStreak: getUserJoinStatus,
 }) => {
-  const { boardId, id: streakId } = getUserJoinStatus;
+  const { id: streakId } = getUserJoinStatus;
   const { handleSubmit, register } = useForm<ILog>();
-  const updateStreak = useUpdateStreak();
   const createLog = useCreateLog();
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const onSubmit: SubmitHandler<ILog> = (data) => {

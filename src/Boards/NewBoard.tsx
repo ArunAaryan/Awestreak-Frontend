@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
 
 export interface IBoardInput {
   id?: string;
@@ -20,8 +19,7 @@ export interface IBoardInput {
   frequency?: number;
 }
 const NewBoard = () => {
-  const { register, handleSubmit, watch, formState, control } =
-    useForm<IBoardInput>();
+  const { register, handleSubmit, watch, control } = useForm<IBoardInput>();
 
   const createBoard = useCreateBoard();
   const onSubmit: SubmitHandler<IBoardInput> = (data) => {
@@ -54,7 +52,7 @@ const NewBoard = () => {
           <Controller
             control={control}
             name="period"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            render={({ field: { onChange, value } }) => (
               <Select onValueChange={onChange}>
                 <SelectTrigger className="w-40">
                   <SelectValue

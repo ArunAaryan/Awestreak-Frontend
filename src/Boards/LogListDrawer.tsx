@@ -1,14 +1,9 @@
 import { getLogs } from "@/api/boards/boards-api";
 import { ILog } from "@/api/boards/boards.types";
-import { Button } from "@/components/ui/button";
 import {
-  DrawerTrigger,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerClose,
   Drawer,
 } from "@/components/ui/drawer";
 import React, { useState } from "react";
@@ -46,18 +41,18 @@ const LogListDrawer: React.FC<IlogListDrawerProps> = ({ streakId }) => {
           {logs?.map((log) => (
             <div
               key={log.id}
-              className="flex justify-between w-full px-2 mb-4 "
+              className="flex flex-col w-full px-2 mb-4 border border-2 border-gray-900 rounded-md p-2"
             >
-              <p className="text-gray-100 text-md line-clamp-1">
-                {log.description}
-                {log.description}
-                {log.description}
-                {log.description}
-                {log.description}
-              </p>
-              <p className="text-gray-500 text-sm ml-2 shrink-0">
+              <p className="text-orange-400 text-xs  shrink-0">
                 {/* {log.createdAt} */}
                 {new Date(log.created_at).toDateString()}
+              </p>
+              <p className="text-gray-100 text-sm line-clamp-2">
+                {log.description}
+                {log.description}
+                {log.description}
+                {log.description}
+                {log.description}
               </p>
             </div>
           ))}

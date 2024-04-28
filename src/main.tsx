@@ -12,7 +12,6 @@ import {
   boardListLoaderAll,
   boardListLoaderMy,
 } from "./api/boards/boards-api.ts";
-import HomeTemp from "./HomeTemp.tsx";
 import EditBoard from "./Boards/EditBoard.tsx";
 const queryClient = new QueryClient();
 const router = createBrowserRouter([

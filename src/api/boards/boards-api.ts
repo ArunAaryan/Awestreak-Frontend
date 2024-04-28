@@ -1,7 +1,6 @@
 import axiosClient from "@/axios";
 import {
   QueryClient,
-  UseQueryOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -9,7 +8,7 @@ import {
 import { boardQueryKeys } from "./boards.keys";
 import { useNavigate, useParams } from "react-router-dom";
 import { IBoardInput } from "@/Boards/NewBoard";
-import { IBoardProps, ILog, IStreak } from "./boards.types";
+import { IBoardProps, ILog } from "./boards.types";
 import { toast } from "sonner";
 export const staleTime = Infinity;
 export const getBoardById = async (id: string) => {
@@ -118,7 +117,7 @@ export function useJoinBoard() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: joinBoard,
-    onMutate: async (boardDetail) => {
+    onMutate: async () => {
       await queryClient.cancelQueries(boardQueryKeys.all);
       await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
     },
@@ -142,7 +141,7 @@ export function useLeaveBoard() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: leaveBoard,
-    onMutate: async (boardDetail) => {
+    onMutate: async () => {
       await queryClient.cancelQueries(boardQueryKeys.all);
       await queryClient.invalidateQueries({ queryKey: boardQueryKeys.all });
     },
@@ -170,17 +169,18 @@ export function useEditBoard() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   return useMutation({
-    mutationFn: editBoard,
-    onMutate: (boardData) => {
+    mutationFn: (data: IBoardInput) => editBoard({ id: boardId, ...data }),
+    onMutate: () => {
       queryClient.cancelQueries(boardQueryKeys.all);
     },
-    onSuccess: (data) => {
+    onSuccess: (data, _) => {
       queryClient.invalidateQueries(boardQueryKeys.all);
       navigate(`/boards/${data.id}`);
       showEditToast();
     },
   });
 }
+
 export const deleteBoard = async (boardId: string) => {
   const res = await axiosClient.delete(`boards/${boardId}`);
   return res.data;
@@ -197,7 +197,7 @@ export function useDeleteBoard() {
     onMutate: () => {
       queryClient.cancelQueries(boardQueryKeys.all);
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(boardQueryKeys.all);
       navigate(`/boards/all`);
       showDeleteToast();

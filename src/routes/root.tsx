@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../Navbar/index.tsx";
 import { Outlet, useSearchParams } from "react-router-dom";
 import {
@@ -13,9 +13,9 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import axiosClient from "@/axios.ts";
 import { API_URL } from "../../config.ts";
-import ErrorBoundary from "@/ErrorBoundar.tsx";
+import ErrorBoundary from "@/ErrorBoundary.tsx";
 const Root = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [userId, setUserId] = useState(null);
   useEffect(() => {
     const getUserData = async (access_token: string) => {

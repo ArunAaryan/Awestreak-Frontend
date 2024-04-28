@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
-import { userContext as UserContext } from "./routes/UserContext";
-import ErrorBoundary from "./ErrorBoundar";
+import ErrorBoundary from "./ErrorBoundary";
 const queryClient = new QueryClient();
 function App() {
   return (

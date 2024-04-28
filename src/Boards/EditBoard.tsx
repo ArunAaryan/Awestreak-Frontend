@@ -11,21 +11,22 @@ export interface IBoardInput {
 }
 const EditBoard = () => {
   const getBoard = useGetBoardDetail();
-  const { register, handleSubmit, watch, formState, setValue } =
-    useForm<IBoardProps>({});
+  const { register, handleSubmit, setValue } = useForm<IBoardProps>({});
+  const board = getBoard.data;
   useEffect(() => {
-    if (getBoard?.data) {
-      // Set form values using setValue
-      Object.keys(getBoard?.data).forEach((key) => {
-        setValue(key, getBoard.data[key]);
+    if (board) {
+      const keys = ["name", "description", "image"] as (keyof IBoardProps)[];
+
+      keys.forEach((key) => {
+        setValue(key, board[key]);
       });
     }
-  }, [getBoard.data, setValue]);
+  }, [board, setValue]);
   const editUser = useEditBoard();
   return (
     <div>
       <form
-        onSubmit={handleSubmit(editUser.mutate)}
+        onSubmit={handleSubmit(editUser.mutate as any)}
         className="text-gray-50 flex flex-col gap-4"
       >
         <div>

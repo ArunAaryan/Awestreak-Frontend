@@ -12,7 +12,7 @@ import { userContext as UserContext } from "./UserContext.ts";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import axiosClient from "@/axios.ts";
-import { API_URL } from "../../config.ts";
+import { API_URL, SOCKET_URL } from "../../config.ts";
 import ErrorBoundary from "@/ErrorBoundary.tsx";
 import { OverlayLoader } from "../components/ui/Loader.tsx";
 import { loaderContext as LoaderContext } from "../LoaderContext.ts";
@@ -27,7 +27,7 @@ const Root = () => {
   // const [socketUrl, setSocketUrl] = useState("wss://localhost:3000");
 
   useEffect(() => {
-    const socket = io(API_URL);
+    const socket = io(SOCKET_URL);
 
     socket.on("connect", () => {
       console.log("Connected to Nestjs websocket server!");

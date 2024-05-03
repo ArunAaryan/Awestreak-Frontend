@@ -15,7 +15,7 @@ export interface IStreak {
   updated_at: Date;
   userId: string;
   boardId: string;
-  current_streak: Number;
+  current_streak: number;
   User: IUser;
 }
 export interface IUser {

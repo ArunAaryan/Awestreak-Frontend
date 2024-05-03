@@ -245,7 +245,7 @@ export const createLog = async (boardId: string, logData: ILog) => {
   return res.data;
 };
 
-export function useCreateLog() {
+export function useCreateLog(setLoading: (isLoading: boolean) => void) {
   const { id: boardId } = useParams<{ id: string }>();
   if (!boardId) {
     throw new Error("Board ID is not provided.");
@@ -254,10 +254,12 @@ export function useCreateLog() {
   return useMutation({
     mutationFn: (logData: ILog) => createLog(boardId, logData),
     onMutate: () => {
+      setLoading(true);
       queryClient.cancelQueries(boardQueryKeys.detail(boardId));
       queryClient.invalidateQueries(boardQueryKeys.detail(boardId));
     },
     onSuccess: (data) => {
+      setLoading(false);
       queryClient.setQueryData(boardQueryKeys.detail(boardId), data);
     },
   });

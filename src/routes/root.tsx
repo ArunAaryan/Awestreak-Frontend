@@ -59,17 +59,26 @@ const Root = () => {
   }, []);
   useEffect(() => {
     const getUserData = async (access_token: string) => {
-      const res = await axiosClient.get(`${API_URL}/auth/user`, {
-        headers: {
-          Authorization: "Bearer " + access_token,
-        },
-      });
-      if (res.status == 401) {
-        window.location.href = "/";
+      try {
+        const res = await axiosClient.get(`${API_URL}/auth/user`, {
+          headers: {
+            Authorization: "Bearer " + access_token,
+          },
+        });
+        if (res.status === 401) {
+          window.location.href = "/";
+        }
+        setUserId(res.data.id);
+        return res.data.userId;
+      } catch (error: any) {
+        console.log(error);
+        if (error.response.status === 401) {
+          await localStorage.removeItem("currentUser");
+          window.location.href = "/";
+        }
       }
-      setUserId(res.data.id);
-      return res.data.userId;
     };
+
     const getTokenFromParams = async () => {
       const token = await localStorage.getItem("currentUser");
 
@@ -99,13 +108,13 @@ const Root = () => {
       } else {
         // No token - redirect to authorize
         window.location.href = `${API_URL}/auth/google`;
+      }
 
-        // Get new token from params after redirect
-        const access_token = await searchParams.get("access_token");
-        if (access_token) {
-          await localStorage.setItem("currentUser", access_token);
-          await getUserData(access_token);
-        }
+      // Get new token from params after redirect
+      const access_token = await searchParams.get("access_token");
+      if (access_token) {
+        await localStorage.setItem("currentUser", access_token);
+        await getUserData(access_token);
       }
     };
 

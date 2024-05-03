@@ -8,8 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import React, { useContext } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { loaderContext } from "../LoaderContext";
 
 interface ILogStreakDialogProps {
   userStreak: IStreak;
@@ -20,7 +21,8 @@ const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
 }) => {
   const { id: streakId } = getUserJoinStatus;
   const { handleSubmit, register } = useForm<ILog>();
-  const createLog = useCreateLog();
+  const { setLoading } = useContext(loaderContext);
+  const createLog = useCreateLog(setLoading);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const onSubmit: SubmitHandler<ILog> = (data) => {
     // createUser.mutate(data);: streakId

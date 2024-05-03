@@ -39,16 +39,13 @@ const LogListDrawer: React.FC<IlogListDrawerProps> = ({ streakId }) => {
             <p className="text-gray-100 text-md ">No logs found </p>
           )}
           {logs?.map((log) => (
-            <div
-              key={log.id}
-              className="flex flex-col w-full px-2 mb-4 border-b-2 border-gray-900 p-2 "
-            >
-              <p className="text-gray-100 text-sm line-clamp-2">
+            <div key={log.id} className="flex flex-col w-full px-2 mb-4  p-2 ">
+              <p className="text-gray-100 text-md line-clamp-2">
                 {log.description}
               </p>
-              <p className="text-orange-200 opacity-60 text-xs  shrink-0">
+              <p className="text-gray-800 opacity-60 text-xs  shrink-0">
                 {/* {log.createdAt} */}
-                {new Date(log.created_at).toDateString()}-
+                {new Date(log.created_at).toDateString()} @
                 {new Date(log.created_at).toLocaleTimeString()}
               </p>
             </div>

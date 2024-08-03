@@ -3,7 +3,7 @@
 // export const API_URL = "http://100.78.221.24:3000";
 // export const API_URL = "http://100.121.53.124:3000";
 // export const API_URL = "http://127.0.0.1:3000";
-export const SOCKET_URL = "https://awestreak-backend.onrender.com";
+export const SOCKET_URL = "https://awestreak-backend.nodespirit.xyz";
 //export const API_URL = "http://aruns-macbook-pro.zapus-boa.ts.net:3000";
-export const API_URL = "https://awestreak-backend.onrender.com";
+export const API_URL = "https://awestreak-backend.nodespirit.xyz";
 // export const API_URL = "https://awestreak-backend.onrender.com";

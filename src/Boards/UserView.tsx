@@ -1,10 +1,7 @@
 import { IStreak, IUser } from "@/api/boards/boards.types";
 import React from "react";
 import LogStreakDialog from "./LogStreakDrawer";
-import LogListDrawer from "./LogListDrawer";
-import { checkIfLessThanOrEqualToYesterday } from "@/api/boards/boards.utils";
 import LogListCalendarDrawer from "./LogListCalendarDrawer";
-import LogListCalendarDialog from "./LogListCalendarDrawer";
 interface IUserProps {
   users?: Array<IUser>;
 }

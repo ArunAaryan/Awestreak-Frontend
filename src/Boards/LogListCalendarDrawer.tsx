@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Calendar } from "../components/ui/calendar";
-import { Dialog, DialogContent } from "@radix-ui/react-dialog";
 import { Drawer, DrawerContent } from "../components/ui/drawer";
-import { getLogs, useGetLogs } from "../api/boards/boards-api";
+import { getLogs } from "../api/boards/boards-api";
 import { ILog } from "../api/boards/boards.types";
 
 const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
@@ -10,10 +9,6 @@ const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
   const [logs, setLogs] = useState<Array<ILog> | null>(null);
   const [dates, setDates] = useState<Date[]>([]);
   const [viewDate, setViewDate] = useState<Date | null>(null);
-  const handleViewDate = (date: Date) => {
-    setIsDrawerOpen(true);
-    setViewDate(date);
-  };
   const showLogOnViewDate = () => {
     if (viewDate) {
       return logs?.filter((log) => {
@@ -45,7 +40,6 @@ const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
         </button>
         <DrawerContent className="flex gap-2 md:max-w-xl self-center items-center m-auto mb-4 p-2">
           <Calendar
-            onSelect={(date) => {}}
             mode="multiple"
             selected={dates}
             onDayFocus={(date) => {

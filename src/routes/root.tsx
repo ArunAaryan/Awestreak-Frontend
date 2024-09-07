@@ -137,7 +137,18 @@ const Root = () => {
                   <div className="flex flex-col gap-4 px-4 md:px-10 py-4 bg-gray-950 min-h-screen max-w-2xl justify-start items-stretch flex-1">
                     <Navbar />
                     <Outlet />
-                    <Toaster />
+                    <Toaster
+                      duration={2000}
+                      toastOptions={{
+                        style: {
+                          backgroundColor: "#4B5563",
+                          border: "none",
+                          boxShadow: "none",
+                        },
+                      }}
+                      theme="dark"
+                      className="border-0 shadow-none"
+                    />
                     {loading && <OverlayLoader />}
                   </div>
                 </div>

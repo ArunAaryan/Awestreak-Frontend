@@ -3,6 +3,8 @@ import React from "react";
 import LogStreakDialog from "./LogStreakDrawer";
 import LogListDrawer from "./LogListDrawer";
 import { checkIfLessThanOrEqualToYesterday } from "@/api/boards/boards.utils";
+import LogListCalendarDrawer from "./LogListCalendarDrawer";
+import LogListCalendarDialog from "./LogListCalendarDrawer";
 interface IUserProps {
   users?: Array<IUser>;
 }
@@ -15,7 +17,7 @@ export const UserViewRow = ({
 }) => {
   const showMarkStreak =
     (userStreak?.updated_at &&
-      checkIfLessThanOrEqualToYesterday(userStreak.updated_at)) ||
+      new Date(userStreak?.updated_at).getDate() < new Date().getDate()) ||
     userStreak?.current_streak === 0;
   return (
     <div className="flex justify-between items-center">
@@ -41,14 +43,20 @@ export const UserViewRow = ({
         <div className="flex flex-col gap-0">
           <p className="text-gray-100 text-sm ">{user.name}</p>
           <p className="text-gray-100 text-xs opacity-50 ">
-            {userStreak?.current_streak?.toString() ?? 0} days streak
+            {userStreak?.current_streak
+              ? userStreak?.current_streak <= 1
+                ? `${userStreak?.current_streak.toString()} day streak`
+                : `${userStreak?.current_streak.toString()} days streak`
+              : ""}
           </p>
         </div>
       </div>
       {userStreak && (
         <div className="flex gap-2">
           {showMarkStreak && <LogStreakDialog userStreak={userStreak} />}
-          <LogListDrawer streakId={userStreak.id} />
+          <LogListCalendarDrawer streakId={userStreak.id} />
+
+          {/* <LogListDrawer streakId={userStreak.id} /> */}
         </div>
       )}
     </div>

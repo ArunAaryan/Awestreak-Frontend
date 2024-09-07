@@ -55,15 +55,17 @@ const NewBoard = () => {
           <Controller
             control={control}
             name="period"
+            defaultValue="EVERYDAY" // Add this line
             render={({ field: { onChange, value } }) => (
-              <Select onValueChange={onChange}>
+              <Select onValueChange={onChange} value={value}>
+                {" "}
                 <SelectTrigger className="w-40">
                   <SelectValue
                     placeholder="Streak Rule"
-                    defaultValue={"everyday"}
+                    defaultValue="EVERYDAY"
                     itemType="text"
                   >
-                    {value}
+                    {value ? value.toUpperCase() : "Select Period"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>

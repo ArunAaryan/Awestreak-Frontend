@@ -13,6 +13,7 @@ import BoardList from "./Boards/BoardList.tsx";
 //   boardListLoaderMy,
 // } from "./api/boards/boards-api.ts";
 import EditBoard from "./Boards/EditBoard.tsx";
+import Profile from "./Profile/index.tsx";
 // const queryClient = new QueryClient();
 const router = createBrowserRouter([
   // {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       </Suspense>
     ),
     children: [
+      {
+        path: "me",
+        element: <Profile />,
+      },
       {
         index: true,
         element: <BoardList />,

@@ -2,7 +2,7 @@
 import Navitem, { INavItem } from "./Navitem";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { PiUserListFill, PiListPlusFill } from "react-icons/pi";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaUser } from "react-icons/fa";
 import { createPortal } from "react-dom";
 const index = () => {
   const links: Array<INavItem> = [
@@ -14,6 +14,7 @@ const index = () => {
       icon: <MdFormatListBulletedAdd size={30} />,
     },
     { name: "Home", link: "/", icon: <FaHome size={30} /> },
+    { name: "Me", link: "/me", icon: <FaUser size={30} /> },
   ];
   // const { setTheme } = useTheme();
   // const [toggleTheme, setToggleTheme] = useState(true);

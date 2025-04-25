@@ -7,13 +7,9 @@ import BoardDetail from "./Boards/BoardDetail.tsx";
 // import { QueryClient } from "react-query";
 import NewBoard from "./Boards/NewBoard.tsx";
 import BoardList from "./Boards/BoardList.tsx";
-
-// import {
-//   boardListLoaderAll,
-//   boardListLoaderMy,
-// } from "./api/boards/boards-api.ts";
 import EditBoard from "./Boards/EditBoard.tsx";
 import Profile from "./Profile/index.tsx";
+import { registerServiceWorker } from "./utils/serviceWorker";
 // const queryClient = new QueryClient();
 const router = createBrowserRouter([
   // {
@@ -77,3 +73,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
+
+// Register service worker
+registerServiceWorker();

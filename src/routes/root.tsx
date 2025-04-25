@@ -19,6 +19,7 @@ import { loaderContext as LoaderContext } from "../LoaderContext.ts";
 import io from "socket.io-client";
 import { boardQueryKeys } from "../api/boards/boards.keys.ts";
 import { toast } from "sonner";
+import ScrollToTop from "../components/ScrollToTop";
 // import { config } from "process";
 const Root = () => {
   const [searchParams] = useSearchParams();
@@ -136,6 +137,7 @@ const Root = () => {
                 <div className="flex mx-auto bg-gray-950 min-h-screen justify-center pt-16">
                   <div className="flex flex-col gap-4 px-4 md:px-10 py-4 bg-gray-950 min-h-screen max-w-2xl justify-start items-stretch flex-1">
                     <Navbar />
+                    <ScrollToTop />
                     <Outlet />
                     <Toaster
                       duration={2000}

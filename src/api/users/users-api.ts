@@ -1,10 +1,5 @@
 import axiosClient from "@/axios";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { useQuery } from "react-query";
 
 export const getCurrentUser = async (id: string) => {
   const res = await axiosClient.get(`/users/${id}`);

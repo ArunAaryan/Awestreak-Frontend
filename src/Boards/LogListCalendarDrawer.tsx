@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 import { getLogs } from "../api/boards/boards-api";
 import { ILog } from "../api/boards/boards.types";
 import { Button } from "@/components/ui/button";
-import { SelectContent } from "@radix-ui/react-select";
 
 const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

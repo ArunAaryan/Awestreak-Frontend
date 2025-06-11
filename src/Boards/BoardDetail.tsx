@@ -7,7 +7,14 @@ import {
   useLeaveBoard,
 } from "@/api/boards/boards-api";
 import { IBoardProps, IStreak, IUser } from "@/api/boards/boards.types";
-import { Suspense, useCallback, useContext, useMemo, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 import { userContext } from "@/routes/UserContext";
 import {
   Popover,
@@ -19,17 +26,26 @@ import Loader from "@/components/ui/Loader";
 // there is a hook problem useRequestProcessor() cannot be used; change this
 import { twMerge } from "tailwind-merge";
 import { loaderContext } from "../LoaderContext";
+import { Button } from "@/components/ui/button";
+
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
-
   const { setLoading } = useContext(loaderContext);
+  const [isVisible, setIsVisible] = useState(false);
   const joinBoard = useJoinBoard(setLoading);
-
   const leaveBoard = useLeaveBoard(setLoading);
-
   const userCount = board?.Streak?.length ?? 0;
-
   const userId = useContext(userContext);
+  const [interactiveDescription, setInteractiveDescription] = useState(false);
+
+  useEffect(() => {
+    if (isLoading) {
+      setIsVisible(false);
+    } else {
+      // Small delay to ensure smooth transition
+      setTimeout(() => setIsVisible(true), 100);
+    }
+  }, [isLoading]);
 
   const getUsers = useCallback(
     (streakArray: Array<IStreak>) => {
@@ -56,18 +72,21 @@ const BoardDetail = () => {
   }, [board, userId]);
 
   const isCurrentUserBoardAdmin = userId === board?.userId;
-  const [interactiveDescription, setInteractiveDescription] = useState(false);
 
   if (isLoading) return <Loader />;
   return (
     <Suspense fallback={<div className=""> suspense</div>}>
       <Dialog>
-        <div className="">
+        <div
+          className={`transform transition-all duration-500 ease-in-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+          }`}
+        >
           {board && (
             <>
               <div
                 className={twMerge(
-                  "relative h-[18vh] w-[100%] rounded-md transition-all duration-300 ease-in-out ",
+                  "relative h-[18vh] w-[100%] rounded-md transition-all duration-300 ease-in-out",
                   interactiveDescription ? "h-[25vh]" : ""
                 )}
               >
@@ -77,12 +96,12 @@ const BoardDetail = () => {
                   className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-300 ease-in-out"
                   style={{ filter: "blur(3px) brightness(0.4)" }}
                 />
-                <div className="absolute top-0 left-0 h-[100%] w-[100%] flex  justify-between p-2 gap-2">
+                <div className="absolute top-0 left-0 h-[100%] w-[100%] flex justify-between p-2 gap-2">
                   <div className="flex flex-col justify-end">
                     <h2 className="text-gray-100 text-lg">{board?.name}</h2>
                     <h2
                       className={twMerge(
-                        "text-gray-100 opacity-60 text-xs hover:cursor-pointer ",
+                        "text-gray-100 opacity-60 text-xs hover:cursor-pointer transition-all duration-300",
                         interactiveDescription ? "" : "line-clamp-4"
                       )}
                       onClick={() =>
@@ -93,35 +112,34 @@ const BoardDetail = () => {
                     </h2>
                   </div>
                   <div className="flex flex-col items-end justify-between whitespace-nowrap">
-                    <div>
+                    <div className="flex flex-col gap-2">
                       {!userStreak && (
-                        <button
-                          className="flex text-gray-100 text-xs border border-gray-100 px-2 my-1 py-1 rounded-md max-w-min hover:border-gray-500"
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => joinBoard.mutate(board?.id)}
                         >
                           join
-                        </button>
+                        </Button>
                       )}
                       {userStreak && (
-                        <button
-                          className="flex text-gray-100 text-xs border border-gray-100 px-2 my-1.5 py-1 rounded-md max-w-min opacity-100 hover:border-gray-500"
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => leaveBoard.mutate(board?.id)}
                         >
                           leave
-                        </button>
+                        </Button>
                       )}
 
                       {isCurrentUserBoardAdmin && (
                         <Popover>
                           <PopoverTrigger>
-                            <p
-                              className="text-gray-50 text-xs border border-gray-100 px-2 my-1.5 py-1 rounded-md max-w-min hover:border-gray-500"
-                              tabIndex={-1}
-                            >
+                            <Button size="sm" variant="outline" tabIndex={-1}>
                               manage
-                            </p>
+                            </Button>
                           </PopoverTrigger>
-                          <PopoverContent>
+                          <PopoverContent className="bg-background text-foreground rounded-md">
                             <AdminUserActions {...board} />
                           </PopoverContent>
                         </Popover>
@@ -140,12 +158,25 @@ const BoardDetail = () => {
                   </div>
                 </div>
               </div>
-              <div>
+              <div className="transform transition-all duration-500 ease-in-out">
                 {userStreak && (
-                  <UserViewRow user={userStreak.User} userStreak={userStreak} />
+                  <div
+                    className="transform transition-all duration-500 ease-in-out"
+                    style={{ transitionDelay: "100ms" }}
+                  >
+                    <UserViewRow
+                      user={userStreak.User}
+                      userStreak={userStreak}
+                    />
+                  </div>
                 )}
                 {board?.Streak && board?.Streak?.length > 0 && (
-                  <UserView users={getUsers(board.Streak) ?? []}></UserView>
+                  <div
+                    className="transform transition-all duration-500 ease-in-out"
+                    style={{ transitionDelay: "200ms" }}
+                  >
+                    <UserView users={getUsers(board.Streak) ?? []}></UserView>
+                  </div>
                 )}
               </div>
               {/* <LogListDrawer streakId={userStreak?.id || ""} /> */}
@@ -161,24 +192,24 @@ const AdminUserActions: React.FC<IBoardProps> = ({ id }) => {
   const navigate = useNavigate();
   const deleteBoard = useDeleteBoard();
   return (
-    <div className="flex gap-2 flex-col relative h-20 w-20 justify-center items-center">
-      <div className="flex gap-2 flex-col  bg-white/10  absolute  top-0  left-0 h-20 w-20 backdrop-blur rounded-sm "></div>
-      <div className=" z-10 translate-x-0 translate-y-0 m-2 flex flex-col gap-2 p-2">
-        <DialogTrigger>
-          <button
-            className="flex text-xs    text-gray-600 font-semibold py-1 px-2 bg-red-200 rounded-sm"
-            onClick={() => deleteBoard.mutate(id)}
-          >
-            Delete
-          </button>
-        </DialogTrigger>
-        <button
-          className="flex text-xs    text-gray-600 font-semibold py-1 px-2 bg-cyan-200 rounded-sm"
-          onClick={() => navigate(`/boards/${id}/edit`)}
+    <div className="flex flex-col gap-2 bg-background p-4 rounded-md">
+      <DialogTrigger>
+        <Button
+          size="sm"
+          variant="destructive"
+          onClick={() => deleteBoard.mutate(id)}
         >
-          Edit
-        </button>
-      </div>
+          Delete
+        </Button>
+      </DialogTrigger>
+      <Button
+        size="sm"
+        variant="outline"
+        className="cursor-pointer"
+        onClick={() => navigate(`/boards/${id}/edit`)}
+      >
+        Edit
+      </Button>
     </div>
   );
 };

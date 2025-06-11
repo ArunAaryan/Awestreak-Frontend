@@ -19,7 +19,13 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <Suspense fallback={<p>Suspense</p>}>
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+            <p className="text-lg text-muted-foreground">Loading...</p>
+          </div>
+        }
+      >
         <Root />
       </Suspense>
     ),
@@ -70,7 +76,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <div className="min-h-screen bg-background text-foreground">
+      <RouterProvider router={router} />
+    </div>
   </React.StrictMode>
 );
 

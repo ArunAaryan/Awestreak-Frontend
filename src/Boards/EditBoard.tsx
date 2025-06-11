@@ -29,7 +29,7 @@ const EditBoard = () => {
     <div>
       <form
         onSubmit={handleSubmit(editUser.mutate as any)}
-        className="text-gray-50 flex flex-col gap-4"
+        className="flex flex-col gap-4"
       >
         <div>
           <Input {...register("name")} defaultValue="" placeholder="Name" />

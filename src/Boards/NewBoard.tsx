@@ -31,10 +31,7 @@ const NewBoard = () => {
   const currentPeriod = watch("period");
   return (
     <div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="text-gray-50 flex flex-col gap-4"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
           <Input {...register("name")} defaultValue="" placeholder="Name" />
         </div>

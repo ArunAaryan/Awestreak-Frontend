@@ -9,7 +9,7 @@ import {
 const queryClient = new QueryClient();
 
 import { userContext as UserContext } from "./UserContext.ts";
-import { Toaster } from "sonner";
+import { Toaster as ShadcnToaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import axiosClient from "@/axios.ts";
 import { API_URL, SOCKET_URL } from "../../config.ts";
@@ -133,25 +133,16 @@ const Root = () => {
             }}
           >
             <QueryClientProvider client={queryClient}>
-              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <div className="flex mx-auto bg-gray-950 min-h-screen justify-center pt-16">
-                  <div className="flex flex-col gap-4 px-4 md:px-10 py-4 bg-gray-950 min-h-screen max-w-2xl justify-start items-stretch flex-1">
-                    <Navbar />
-                    <ScrollToTop />
-                    <Outlet />
-                    <Toaster
-                      duration={2000}
-                      toastOptions={{
-                        style: {
-                          backgroundColor: "#4B5563",
-                          border: "none",
-                          boxShadow: "none",
-                        },
-                      }}
-                      theme="dark"
-                      className="border-0 shadow-none"
-                    />
-                    {loading && <OverlayLoader />}
+              <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+                <div className="min-h-screen bg-background text-foreground transition-colors duration-200">
+                  <div className="flex mx-auto min-h-screen justify-center pt-16">
+                    <div className="flex flex-col gap-4 px-4 md:px-10 py-4 min-h-screen max-w-2xl justify-start items-stretch flex-1 bg-card text-card-foreground rounded-lg shadow-sm ">
+                      <Navbar />
+                      <ScrollToTop />
+                      <Outlet />
+                      <ShadcnToaster duration={2000} />
+                      {loading && <OverlayLoader />}
+                    </div>
                   </div>
                 </div>
               </ThemeProvider>

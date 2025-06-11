@@ -7,6 +7,7 @@ import {
   Drawer,
 } from "@/components/ui/drawer";
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface IlogListDrawerProps {
   streakId: string;
@@ -25,12 +26,13 @@ const LogListDrawer: React.FC<IlogListDrawerProps> = ({ streakId }) => {
   return (
     <div className="">
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <button
-          className="inline-flex  flex-nowrap text-gray-50 text-xs border border-gray-100 px-2  py-1.5 rounded-md  opacity-100 hover:border-gray-500"
+        <Button
+          size="sm"
+          variant="outline"
           onClick={() => handleLogs(streakId)}
         >
           Show Logs
-        </button>
+        </Button>
         <DrawerContent className="flex gap-2 md:max-w-xl self-center items-center m-auto mb-4 p-2">
           <DrawerHeader>
             <DrawerTitle>Log History</DrawerTitle>

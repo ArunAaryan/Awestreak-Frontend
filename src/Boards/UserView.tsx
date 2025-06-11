@@ -23,7 +23,7 @@ export const UserViewRow = ({
         key={user.id}
       >
         <div className="flex flex-col p-2">
-          <div className="h-10 w-10 bg-teal-300 rounded-full flex items-center justify-center flex-col">
+          <div className="h-10 w-10 bg-secondary rounded-full flex items-center justify-center flex-col">
             {user.image && (
               <img
                 src={user.image}
@@ -31,15 +31,15 @@ export const UserViewRow = ({
               />
             )}
             {!user?.image && (
-              <p className="text-lg text-gray-200 font-semibold">
+              <p className="text-lg text-foreground font-semibold">
                 {user.name.slice(0, 1)}
               </p>
             )}
           </div>
         </div>
         <div className="flex flex-col gap-0">
-          <p className="text-gray-100 text-sm ">{user.name}</p>
-          <p className="text-gray-100 text-xs opacity-50 ">
+          <p className="text-foreground text-sm ">{user.name}</p>
+          <p className="text-foreground text-xs opacity-50 ">
             {userStreak?.current_streak
               ? userStreak?.current_streak <= 1
                 ? `${userStreak?.current_streak.toString()} day streak`

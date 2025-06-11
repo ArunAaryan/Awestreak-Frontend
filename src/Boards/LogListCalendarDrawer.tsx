@@ -3,6 +3,7 @@ import { Calendar } from "../components/ui/calendar";
 import { Drawer, DrawerContent } from "../components/ui/drawer";
 import { getLogs } from "../api/boards/boards-api";
 import { ILog } from "../api/boards/boards.types";
+import { Button } from "@/components/ui/button";
 
 const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -32,12 +33,13 @@ const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
   return (
     <div>
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <button
-          className="inline-flex  flex-nowrap text-gray-50 text-xs border border-gray-100 px-2  py-1.5 rounded-md  opacity-100 hover:border-gray-500"
+        <Button
+          size="sm"
+          variant="outline"
           onClick={() => handleLogs(streakId)}
         >
           Log List
-        </button>
+        </Button>
         <DrawerContent className="flex gap-2 md:max-w-xl self-center items-center m-auto mb-4 p-2">
           <Calendar
             mode="multiple"
@@ -51,7 +53,7 @@ const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
             showLogOnViewDate()?.map((log) => (
               <div
                 key={log.id}
-                className=" flex flex-col justify-start items-start border border-gray-500 p-2 rounded-md w-[230px]"
+                className=" flex flex-col justify-start items-start border  p-2 rounded-md w-[230px]"
               >
                 <p className="text- text-gray-100">{log.description}</p>
                 <p className="text-gray-100/50 text-xs">

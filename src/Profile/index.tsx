@@ -10,9 +10,13 @@ import { toast } from "sonner";
 import { useGetCurrentUser } from "../api/users/users-api";
 import { userContext } from "../routes/UserContext";
 import { useContext } from "react";
+import { useTheme } from "@/components/theme-provider";
+import { FaSun, FaMoon } from "react-icons/fa";
+
 const Profile = () => {
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm<IBoardProps>({});
+  const { theme, setTheme } = useTheme();
 
   const updateuser = async (name: string) => {
     const res = await axiosClient.put(API_URL + "/users", {
@@ -36,15 +40,28 @@ const Profile = () => {
           className="w-32 h-32 rounded-full"
         />
         <div className="flex flex-col gap-2 mr-5">
-          <p className="text-gray-50 text-2xl font-bold">{user?.name}</p>
-          <p className="text-gray-50 text-sm ">{user?.email}</p>
-          <p className="text-gray-50 text-sm ">
+          <p className="text-foreground text-2xl font-bold">{user?.name}</p>
+          <p className="text-foreground text-sm ">{user?.email}</p>
+          <p className="text-foreground text-sm ">
             {new Date(user?.date_joined).toLocaleDateString()}
           </p>
         </div>
       </div>
+      <Button
+        type="button"
+        variant="outline"
+        className="self-end"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        aria-label="Toggle theme"
+      >
+        {theme === "dark" ? (
+          <FaSun className="w-5 h-5" />
+        ) : (
+          <FaMoon className="w-5 h-5" />
+        )}
+      </Button>
       <form
-        className="flex flex-col gap-4 text-gray-50"
+        className="flex flex-col gap-4"
         onSubmit={handleSubmit((data) => updateuser(data.name))}
       >
         <Input

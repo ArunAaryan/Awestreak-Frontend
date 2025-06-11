@@ -20,7 +20,9 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  PopoverPortal,
 } from "@radix-ui/react-popover";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import Loader from "@/components/ui/Loader";
 // there is a hook problem useRequestProcessor() cannot be used; change this
@@ -86,7 +88,7 @@ const BoardDetail = () => {
             <>
               <div
                 className={twMerge(
-                  "relative h-[18vh] w-[100%] rounded-md transition-all duration-300 ease-in-out",
+                  "relative h-[18vh] w-[100%] rounded-md transition-all duration-600 ease-in-out",
                   interactiveDescription ? "h-[25vh]" : ""
                 )}
               >
@@ -94,7 +96,7 @@ const BoardDetail = () => {
                   src={board?.image}
                   alt="Background"
                   className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-300 ease-in-out"
-                  style={{ filter: "blur(3px) brightness(0.4)" }}
+                  style={{ filter: "blur(1px) brightness(0.8)" }}
                 />
                 <div className="absolute top-0 left-0 h-[100%] w-[100%] flex justify-between p-2 gap-2">
                   <div className="flex flex-col justify-end">
@@ -122,26 +124,26 @@ const BoardDetail = () => {
                           join
                         </Button>
                       )}
-                      {userStreak && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => leaveBoard.mutate(board?.id)}
-                        >
-                          leave
-                        </Button>
-                      )}
 
-                      {isCurrentUserBoardAdmin && (
+                      {(userStreak || isCurrentUserBoardAdmin) && (
                         <Popover>
                           <PopoverTrigger>
                             <Button size="sm" variant="outline" tabIndex={-1}>
-                              manage
+                              <HamburgerMenuIcon className="h-4 w-4" />
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="bg-background text-foreground rounded-md">
-                            <AdminUserActions {...board} />
-                          </PopoverContent>
+                          <PopoverPortal>
+                            <PopoverContent className="bg-background text-foreground shadow-md rounded-md z-50">
+                              <BoardActions
+                                board={board}
+                                userStreak={userStreak}
+                                isCurrentUserBoardAdmin={
+                                  isCurrentUserBoardAdmin
+                                }
+                                leaveBoard={leaveBoard}
+                              />
+                            </PopoverContent>
+                          </PopoverPortal>
                         </Popover>
                       )}
                     </div>
@@ -188,28 +190,57 @@ const BoardDetail = () => {
   );
 };
 
-const AdminUserActions: React.FC<IBoardProps> = ({ id }) => {
+interface BoardActionsProps {
+  board: IBoardProps;
+  userStreak: IStreak | undefined;
+  isCurrentUserBoardAdmin: boolean;
+  leaveBoard: any;
+}
+
+const BoardActions: React.FC<BoardActionsProps> = ({
+  board,
+  userStreak,
+  isCurrentUserBoardAdmin,
+  leaveBoard,
+}) => {
   const navigate = useNavigate();
   const deleteBoard = useDeleteBoard();
+
   return (
-    <div className="flex flex-col gap-2 bg-background p-4 rounded-md">
-      <DialogTrigger>
+    <div className="flex flex-col gap-3 p-4 min-w-[140px] mt-2">
+      {userStreak && (
         <Button
           size="sm"
-          variant="destructive"
-          onClick={() => deleteBoard.mutate(id)}
+          variant="outline"
+          onClick={() => leaveBoard.mutate(board?.id)}
+          className="justify-start"
         >
-          Delete
+          Leave Board
         </Button>
-      </DialogTrigger>
-      <Button
-        size="sm"
-        variant="outline"
-        className="cursor-pointer"
-        onClick={() => navigate(`/boards/${id}/edit`)}
-      >
-        Edit
-      </Button>
+      )}
+
+      {isCurrentUserBoardAdmin && (
+        <>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => navigate(`/boards/${board.id}/edit`)}
+            className="justify-start"
+          >
+            Edit Board
+          </Button>
+          <DialogTrigger asChild>
+            <Button
+              size="sm"
+              variant="destructive"
+              className="justify-start"
+              onClick={() => deleteBoard.mutate(board.id)}
+            >
+              Delete Board
+            </Button>
+          </DialogTrigger>
+        </>
+      )}
     </div>
   );
 };

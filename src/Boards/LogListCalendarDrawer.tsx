@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Calendar } from "../components/ui/calendar";
-import { Drawer, DrawerContent } from "../components/ui/drawer";
+import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 import { getLogs } from "../api/boards/boards-api";
 import { ILog } from "../api/boards/boards.types";
 import { Button } from "@/components/ui/button";
+import { SelectContent } from "@radix-ui/react-select";
 
 const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [logs, setLogs] = useState<Array<ILog> | null>(null);
   const [dates, setDates] = useState<Date[]>([]);
   const [viewDate, setViewDate] = useState<Date | null>(null);
@@ -28,41 +29,59 @@ const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
       setDates(dates);
     }
     setViewDate(new Date());
-    setIsDrawerOpen(true);
+    setIsDialogOpen(true);
   };
   return (
     <div>
-      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => handleLogs(streakId)}
-        >
-          Log List
-        </Button>
-        <DrawerContent className="flex gap-2 md:max-w-xl self-center items-center m-auto mb-4 p-2">
-          <Calendar
-            mode="multiple"
-            selected={dates}
-            onDayFocus={(date) => {
-              console.log(date);
-              setViewDate(date);
-            }}
-          />
-          {viewDate &&
-            showLogOnViewDate()?.map((log) => (
-              <div
-                key={log.id}
-                className=" flex flex-col justify-start items-start border  p-2 rounded-md w-[230px]"
-              >
-                <p className="text- text-gray-100">{log.description}</p>
-                <p className="text-gray-100/50 text-xs">
-                  {new Date(log.created_at).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
-        </DrawerContent>
-      </Drawer>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => handleLogs(streakId)}
+          >
+            Log List
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="rounded-lg">
+          <div className="flex flex-col md:flex-row gap-2 items-center justify-center ">
+            <Calendar
+              mode="multiple"
+              selected={dates}
+              onDayFocus={(date) => {
+                // console.log(date);
+                setViewDate(date);
+              }}
+            />
+            <div className="flex flex-col gap-2 md:mt-7">
+              {viewDate &&
+                showLogOnViewDate()?.map((log) => (
+                  <div
+                    key={log.id}
+                    className="flex flex-col justify-start items-start border p-2 rounded-md w-[230px]"
+                  >
+                    <h5 className="text-muted-foreground text-xl">
+                      {log.description}
+                    </h5>
+                    <p className="text-muted-foreground text-xs">
+                      {new Date(log.created_at).toLocaleDateString("en-IN", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        timeZone: "Asia/Kolkata",
+                      })}
+                      ,{" "}
+                      {new Date(log.created_at).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import { IBoardProps } from "@/api/boards/boards.types.ts";
 import { useContext, useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { loaderContext } from "../LoaderContext.ts";
+import Loader from "@/components/ui/Loader";
 
 interface IBoardList {
   boards?: Array<IBoardProps>;
@@ -23,7 +24,7 @@ const BoardList_: React.FC<IBoardList> = ({ boards }) => {
         boards.map((board: IBoardProps, index: number) => (
           <div
             key={board.id}
-            className="transform transition-all duration-500 ease-in-out"
+            className="transform transition-all duration-500 ease-in-out "
             style={{
               opacity: 1,
               transform: "translateY(0)",
@@ -70,6 +71,10 @@ const BoardList = ({ type }: { type: "all" | "my" | "private" }) => {
     }
   }, [isLoading, setLoading]);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   if (boards && boards.length > 0) {
     return (
       <div
@@ -88,9 +93,18 @@ const BoardList = ({ type }: { type: "all" | "my" | "private" }) => {
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
       }`}
     >
-      <h3 className="text-foreground text-xl font-semibold">
+      <img
+        src="/awestreak_logo.png"
+        alt="No boards"
+        className="w-32 h-32 mb-4 opacity-80"
+      />
+      <h3 className="text-foreground text-xl font-semibold mb-2">
         You have not joined any board yet!
       </h3>
+      <p className="text-muted-foreground text-sm text-center max-w-xs">
+        Boards help you track your streaks and collaborate with others. Create
+        or join a board to get started!
+      </p>
     </div>
   );
 };

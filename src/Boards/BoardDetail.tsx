@@ -207,7 +207,7 @@ const BoardActions: React.FC<BoardActionsProps> = ({
   const deleteBoard = useDeleteBoard();
 
   return (
-    <div className="flex flex-col gap-3 p-4 min-w-[140px] mt-2">
+    <div className="flex flex-col gap-3 p-4 min-w-[140px] mt-2 bg-card rounded-md">
       {userStreak && (
         <Button
           size="sm"

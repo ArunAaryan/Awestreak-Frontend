@@ -2,7 +2,7 @@
 import Navitem, { INavItem } from "./Navitem";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { PiUserListFill, PiListPlusFill } from "react-icons/pi";
-import { FaHome, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { createPortal } from "react-dom";
 const index = () => {
   const links: Array<INavItem> = [

@@ -29,7 +29,6 @@ import Loader from "@/components/ui/Loader";
 import { twMerge } from "tailwind-merge";
 import { loaderContext } from "../LoaderContext";
 import { Button } from "@/components/ui/button";
-import { Progress } from "../components/ui/progress";
 import BoardProgress from "./BoardProgress";
 
 const BoardDetail = () => {

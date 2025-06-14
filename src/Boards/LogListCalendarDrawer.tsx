@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Calendar } from "../components/ui/calendar";
 import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
-import { getLogs, useGetLogs } from "../api/boards/boards-api";
+import { getLogs } from "../api/boards/boards-api";
 import { ILog } from "../api/boards/boards.types";
 import { Button } from "@/components/ui/button";
 
@@ -28,7 +28,7 @@ const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
     to?: Date
   ) => {
     // change this limit by pagination calendar
-    const logData = await getLogs(streakId, (limit = 3), from, to);
+    const logData = await getLogs(streakId, limit ?? 3, from, to);
     if (logData) {
       const dates = logData?.map((log: ILog) => new Date(log.created_at));
       setLogs(logData);

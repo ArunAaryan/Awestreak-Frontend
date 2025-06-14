@@ -1,6 +1,6 @@
 import { useCreateBoard } from "@/api/boards/boards-api";
 import { Button } from "@/components/ui/button";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
   Select,

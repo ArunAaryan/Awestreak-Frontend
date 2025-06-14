@@ -1,4 +1,4 @@
-import { useCreateLog, useGetLogs } from "@/api/boards/boards-api";
+import { useCreateLog } from "@/api/boards/boards-api";
 import { ILog, IStreak } from "@/api/boards/boards.types";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +25,7 @@ const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
   const { handleSubmit, register } = useForm<ILog>();
   const { setLoading } = useContext(loaderContext);
   const createLog = useCreateLog(setLoading);
-  const { data: logs } = useGetLogs(streakId, 100);
+  // const { data: logs } = useGetLogs(streakId, 100);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const onSubmit: SubmitHandler<ILog> = (data) => {
     // createUser.mutate(data);: streakId

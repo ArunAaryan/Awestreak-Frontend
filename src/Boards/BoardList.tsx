@@ -1,7 +1,5 @@
 import Board from "./Board.tsx";
 import {
-  boardListLoaderAll,
-  boardListLoaderMy,
   useGetAllBoards,
   useGetMyBoards,
   useGetPrivateBoards,

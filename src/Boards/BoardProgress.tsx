@@ -1,7 +1,6 @@
 import { Progress } from "../components/ui/progress";
-import { IBoardProps, ILog, IStreak } from "../api/boards/boards.types";
-import { getLogs, useGetLogs } from "../api/boards/boards-api";
-import { useEffect, useState } from "react";
+import { IBoardProps, IStreak } from "../api/boards/boards.types";
+import { useGetLogs } from "../api/boards/boards-api";
 import { Skeleton } from "../components/ui/skeleton";
 
 const BoardProgress = ({
@@ -11,29 +10,60 @@ const BoardProgress = ({
   userStreak: IStreak;
   board: IBoardProps;
 }) => {
-  const endValue = board.frequency;
+  const endValue = board.frequency || 1;
 
+  const getTimeFrame = (period: "EVERYDAY" | "WEEKLY" | "MONTHLY") => {
+    switch (period) {
+      case "EVERYDAY":
+        const today_start = new Date();
+        today_start.setHours(0, 0, 0, 0);
+        const today_end = new Date();
+        today_end.setHours(23, 59, 59, 999);
+        return { from: today_start, to: today_end };
+
+      case "WEEKLY":
+        const lastMonday = new Date();
+        lastMonday.setDate(lastMonday.getDate() - lastMonday.getDay() + 1);
+        lastMonday.setHours(0, 0, 0, 1);
+        return { from: lastMonday, to: new Date() };
+
+      case "MONTHLY":
+        const lastMonth = new Date();
+        lastMonth.setDate(1);
+        lastMonth.setHours(0, 0, 0, 1);
+        return { from: lastMonth, to: new Date() };
+    }
+  };
   // get last monday previous to today
-  const lastMonday = new Date();
-  lastMonday.setDate(lastMonday.getDate() - lastMonday.getDay() + 2);
-  lastMonday.setHours(0, 0, 0, 1);
-  const to = new Date();
 
   const { data: logs, isLoading } = useGetLogs(
     userStreak.id,
     100,
-    lastMonday,
-    to
+    getTimeFrame(board.period).from,
+    getTimeFrame(board.period).to
   );
 
-  const getPeriodName = (period: string) => {
+  const getMessage = (
+    period: "EVERYDAY" | "WEEKLY" | "MONTHLY",
+    logsLength: number
+  ) => {
     switch (period) {
-      case "DAILY":
-        return "day";
+      case "EVERYDAY":
+        return logsLength > 0
+          ? `You have logged for today!`
+          : `You haven't logged for today!`;
       case "WEEKLY":
-        return "week";
+        return logsLength > 0
+          ? `You have logged ${logsLength} ${
+              logsLength > 1 ? "days" : "day"
+            } required for this week !`
+          : `You haven't logged for this week!`;
       case "MONTHLY":
-        return "month";
+        return logsLength > 0
+          ? `You have logged ${logsLength} ${
+              logsLength > 1 ? "days" : "day"
+            } required for this month !`
+          : `You haven't logged for this month!`;
     }
   };
   if (isLoading) return <Skeleton className="h-4 w-full" />;
@@ -41,13 +71,12 @@ const BoardProgress = ({
     <div className="flex flex-col gap-2">
       <Progress value={(logs.length / Number(endValue)) * 100} />
       <div className="flex justify-between text-sm">
-        <h4 className="text-sm font-medium">
-          You have logged {logs.length} days required for this{" "}
-          {getPeriodName(board.period)}
-        </h4>
-        <h4 className="text-sm font-medium">
+        <p className="text-sm font-medium">
+          {getMessage(board.period, logs.length)}
+        </p>
+        <p className="text-sm font-medium">
           {logs.length} / {endValue}
-        </h4>
+        </p>
       </div>
     </div>
   );

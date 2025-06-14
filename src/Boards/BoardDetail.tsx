@@ -90,14 +90,14 @@ const BoardDetail = () => {
             <>
               <div
                 className={twMerge(
-                  "relative h-[18vh] w-[100%] rounded-md transition-all duration-600 ease-in-out",
+                  "relative h-[19vh] w-[100%] rounded-md transition-all duration-600 ease-in-out",
                   interactiveDescription ? "h-[25vh]" : ""
                 )}
               >
                 <img
                   src={board?.image}
                   alt="Background"
-                  className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-300 ease-in-out"
+                  className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-300 ease-in-out rounded-md"
                   style={{ filter: "blur(1px) brightness(0.8)" }}
                 />
                 <div className="absolute top-0 left-0 h-[100%] w-[100%] flex justify-between p-2 gap-2">

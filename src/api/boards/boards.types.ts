@@ -10,7 +10,7 @@ export interface IBoardProps {
   userId: string;
   isPrivate?: boolean;
   frequency?: number;
-  period: "DAILY" | "WEEKLY" | "MONTHLY";
+  period: "EVERYDAY" | "WEEKLY" | "MONTHLY";
 }
 export interface IStreak {
   id: string;

@@ -37,7 +37,7 @@ const Profile = () => {
         <img
           src={user?.image}
           alt="profile"
-          className="w-32 h-32 rounded-full"
+          className="w-full object-cover h-32  rounded-md"
         />
         <div className="flex flex-col gap-2 mr-5">
           <p className="text-foreground text-2xl font-bold">{user?.name}</p>

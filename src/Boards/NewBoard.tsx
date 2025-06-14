@@ -12,6 +12,17 @@ import {
 import { loaderContext } from "../LoaderContext";
 import { useContext } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 export interface IBoardInput {
   id?: string;
@@ -22,95 +33,190 @@ export interface IBoardInput {
   frequency?: number;
   isPrivate?: boolean;
 }
-const NewBoard = () => {
-  const { register, handleSubmit, watch, control, setValue } =
-    useForm<IBoardInput>({
-      defaultValues: { isPrivate: false },
-    });
 
+const BoardSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  description: z
+    .string()
+    .min(2, { message: "Description must be at least 2 characters." }),
+  image: z.string().url({ message: "Image must be a valid URL." }),
+  period: z.enum(["EVERYDAY", "WEEKLY", "MONTHLY"]),
+  frequency: z
+    .union([z.number(), z.string()])
+    .optional()
+    .refine(
+      (val: number | string | undefined) => {
+        if (val === undefined || val === "") return true;
+        return !isNaN(Number(val)) && Number(val) > 0;
+      },
+      { message: "Frequency must be a positive number." }
+    ),
+  isPrivate: z.boolean().optional(),
+});
+
+const NewBoard = () => {
   const { setLoading } = useContext(loaderContext);
   const createBoard = useCreateBoard(setLoading);
-  const onSubmit: SubmitHandler<IBoardInput> = (data) => {
-    createBoard.mutate(data);
+  const form = useForm<z.infer<typeof BoardSchema>>({
+    resolver: zodResolver(BoardSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      image: "",
+      period: "EVERYDAY",
+      frequency: undefined,
+      isPrivate: false,
+    },
+  });
+  const currentPeriod = form.watch("period");
+  const onSubmit = (data: z.infer<typeof BoardSchema>) => {
+    createBoard.mutate({
+      ...data,
+      frequency: data.frequency ? Number(data.frequency) : undefined,
+    });
   };
-  const currentPeriod = watch("period");
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <div>
-          <Input {...register("name")} defaultValue="" placeholder="Name" />
-        </div>
-        <Input
-          {...register("description")}
-          defaultValue=""
-          placeholder="Description"
-          type="textarea"
-        />
-        <div>
-          <Input
-            {...register("image")}
-            defaultValue=""
-            placeholder="Image URL"
-          />
-        </div>
-        <div className="flex gap-2">
-          <Controller
-            control={control}
-            name="period"
-            defaultValue="EVERYDAY" // Add this line
-            render={({ field: { onChange, value } }) => (
-              <Select onValueChange={onChange} value={value}>
-                {" "}
-                <SelectTrigger className="w-40">
-                  <SelectValue
-                    placeholder="Streak Rule"
-                    defaultValue="EVERYDAY"
-                    itemType="text"
-                  >
-                    {value ? value.toUpperCase() : "Select Period"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EVERYDAY">Every Day</SelectItem>
-                  <SelectItem value="WEEKLY">Weekly</SelectItem>
-                  <SelectItem value="MONTHLY">Monthly</SelectItem>
-                </SelectContent>
-              </Select>
+    <div className="flex flex-col gap-4">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-8"
+        >
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }: { field: any }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Step Out Often" {...field} />
+                </FormControl>
+                <FormDescription>Enter the name of your board.</FormDescription>
+                <FormMessage />
+              </FormItem>
             )}
           />
-          {currentPeriod && currentPeriod?.toUpperCase() !== "EVERYDAY" && (
-            <Input
-              {...register("frequency")}
-              className="w-40"
-              defaultValue=""
-              placeholder={`Days in a ${
-                currentPeriod?.toUpperCase() === "MONTHLY" ? "Month" : "Week"
-              }`}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }: { field: any }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <textarea
+                    className="w-full min-h-[80px] rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    placeholder="Stepping out often can be a great way to get some fresh air and exercise."
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Describe what this board is about.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }: { field: any }) => (
+              <FormItem>
+                <FormLabel>Image URL</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="https://example.com/image.png"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Provide a valid image URL for your board.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-col md:flex-row gap-8">
+            <FormField
+              control={form.control}
+              name="period"
+              render={({ field }: { field: any }) => (
+                <FormItem>
+                  <FormLabel>Streak Rule</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue placeholder="Every Day" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="EVERYDAY">Every Day</SelectItem>
+                        <SelectItem value="WEEKLY">Weekly</SelectItem>
+                        <SelectItem value="MONTHLY">Monthly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormDescription>
+                    Choose how often the streak should be tracked.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <Controller
-            control={control}
+            {currentPeriod && currentPeriod !== "EVERYDAY" && (
+              <FormField
+                control={form.control}
+                name="frequency"
+                render={({ field }: { field: any }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {currentPeriod === "MONTHLY"
+                        ? "Days in a Month"
+                        : "Days in a Week"}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="w-40"
+                        placeholder={`ex: 2`}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Enter the number of days required in the selected period.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+          <FormField
+            control={form.control}
             name="isPrivate"
-            render={({ field: { value, onChange } }) => (
-              <>
-                <Checkbox
-                  id="isPrivate"
-                  checked={!!value}
-                  onCheckedChange={onChange}
-                />
-                <label htmlFor="isPrivate" className="text-sm">
-                  Private Board
-                </label>
-              </>
+            render={({ field }: { field: any }) => (
+              <FormItem className="flex flex-col md:flex-row  gap-2 space-y-0">
+                <div className="flex flex-row items-center gap-2 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      id="isPrivate"
+                      checked={!!field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel htmlFor="isPrivate" className="text-sm">
+                    Private Board
+                  </FormLabel>
+                </div>
+                <FormDescription>
+                  If checked, only you can view this board.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
-        <Button type="submit" variant="outline">
-          Create Board
-        </Button>
-      </form>
+          <Button type="submit" variant="outline">
+            Create Board
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 };

@@ -20,11 +20,11 @@ const index = () => {
   // const { setTheme } = useTheme();
   // const [toggleTheme, setToggleTheme] = useState(true);
   return createPortal(
-    <div className="fixed top-0 left-0 right-0 z-100 pt-2 backdrop-blur-md px-2  ">
-      <div className="flex gap-2 mb-2 items-center justify-between md:justify-start md:gap-8 max-w-2xl m-auto">
+    <nav className="fixed top-0 left-0 right-0 z-100 pt-2  backdrop-blur-md bg-background/80 shadow-lg">
+      <div className="flex gap-2 mb-2 items-center justify-between md:justify-start md:gap-8 max-w-2xl m-auto rounded-xl p-1 overflow-x-auto hide-scrollbar">
         {links && links.map((link) => <Navitem {...link} key={link.name} />)}
       </div>
-    </div>,
+    </nav>,
     document.body
   );
 };

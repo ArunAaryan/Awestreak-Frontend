@@ -21,7 +21,8 @@ const LogListCalendarDrawer = ({ streakId }: { streakId: string }) => {
     return null;
   };
   const handleLogs = async (streakId: string) => {
-    const logData = await getLogs(streakId);
+    // change this limit by pagination calendar
+    const logData = await getLogs(streakId, 100);
     if (logData) {
       const dates = logData?.map((log: ILog) => new Date(log.created_at));
       setLogs(logData);

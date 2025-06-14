@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { loaderContext } from "../LoaderContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
@@ -57,6 +57,10 @@ const BoardSchema = z.object({
 const NewBoard = () => {
   const { setLoading } = useContext(loaderContext);
   const createBoard = useCreateBoard(setLoading);
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
   const form = useForm<z.infer<typeof BoardSchema>>({
     resolver: zodResolver(BoardSchema),
     defaultValues: {
@@ -76,7 +80,11 @@ const NewBoard = () => {
     });
   };
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      className={`flex flex-col gap-4 transform transition-all duration-500 ease-in-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+      }`}
+    >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

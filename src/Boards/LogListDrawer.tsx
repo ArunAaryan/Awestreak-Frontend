@@ -16,7 +16,8 @@ const LogListDrawer: React.FC<IlogListDrawerProps> = ({ streakId }) => {
   const [logs, setLogs] = useState<Array<ILog> | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const handleLogs = async (streakId: string) => {
-    const logData = await getLogs(streakId);
+    // change this limit by pagination calendar
+    const logData = await getLogs(streakId, 100);
     if (logData) {
       setLogs(logData);
     }

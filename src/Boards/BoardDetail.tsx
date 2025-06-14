@@ -29,6 +29,8 @@ import Loader from "@/components/ui/Loader";
 import { twMerge } from "tailwind-merge";
 import { loaderContext } from "../LoaderContext";
 import { Button } from "@/components/ui/button";
+import { Progress } from "../components/ui/progress";
+import BoardProgress from "./BoardProgress";
 
 const BoardDetail = () => {
   const { data: board, isLoading } = useGetBoardDetail();
@@ -170,6 +172,7 @@ const BoardDetail = () => {
                       user={userStreak.User}
                       userStreak={userStreak}
                     />
+                    <BoardProgress userStreak={userStreak} board={board} />
                   </div>
                 )}
                 {board?.Streak && board?.Streak?.length > 0 && (
@@ -211,7 +214,7 @@ const BoardActions: React.FC<BoardActionsProps> = ({
       {userStreak && (
         <Button
           size="sm"
-          variant="outline"
+          variant="secondary"
           onClick={() => leaveBoard.mutate(board?.id)}
           className="justify-start"
         >

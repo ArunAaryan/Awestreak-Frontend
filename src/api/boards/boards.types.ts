@@ -9,6 +9,8 @@ export interface IBoardProps {
   updated_at: string;
   userId: string;
   isPrivate?: boolean;
+  frequency?: number;
+  period: "DAILY" | "WEEKLY" | "MONTHLY";
 }
 export interface IStreak {
   id: string;

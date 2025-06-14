@@ -1,4 +1,4 @@
-import { useCreateLog } from "@/api/boards/boards-api";
+import { useCreateLog, useGetLogs } from "@/api/boards/boards-api";
 import { ILog, IStreak } from "@/api/boards/boards.types";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import React, { useContext } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { loaderContext } from "../LoaderContext";
+import { useQueryClient } from "react-query";
 
 interface ILogStreakDialogProps {
   userStreak: IStreak;
@@ -20,9 +21,11 @@ const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
   userStreak: getUserJoinStatus,
 }) => {
   const { id: streakId } = getUserJoinStatus;
+  const queryClient = useQueryClient();
   const { handleSubmit, register } = useForm<ILog>();
   const { setLoading } = useContext(loaderContext);
   const createLog = useCreateLog(setLoading);
+  const { data: logs } = useGetLogs(streakId, 100);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const onSubmit: SubmitHandler<ILog> = (data) => {
     // createUser.mutate(data);: streakId
@@ -31,6 +34,7 @@ const LogStreakDialog: React.FC<ILogStreakDialogProps> = ({
       onError: () => setIsDialogOpen(false),
       onSuccess: () => setIsDialogOpen(false),
     });
+    queryClient.invalidateQueries({ queryKey: ["logs", streakId] });
   };
   return (
     <div className="flex justify-end ">

@@ -8,6 +8,7 @@ const index = () => {
   const links: Array<INavItem> = [
     { name: "All ", link: "/boards/all", icon: <PiListPlusFill size={30} /> },
     { name: "My", link: "/boards/my", icon: <PiUserListFill size={30} /> },
+    { name: "Private", link: "/boards/private", icon: <FaUser size={30} /> },
     {
       name: "Create",
       link: "/boards/create",

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { loaderContext } from "../LoaderContext";
 import { useContext } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export interface IBoardInput {
   id?: string;
@@ -19,9 +20,13 @@ export interface IBoardInput {
   image: string;
   period?: "EVERYDAY" | "WEEKLY" | "MONTHLY";
   frequency?: number;
+  isPrivate?: boolean;
 }
 const NewBoard = () => {
-  const { register, handleSubmit, watch, control } = useForm<IBoardInput>();
+  const { register, handleSubmit, watch, control, setValue } =
+    useForm<IBoardInput>({
+      defaultValues: { isPrivate: false },
+    });
 
   const { setLoading } = useContext(loaderContext);
   const createBoard = useCreateBoard(setLoading);
@@ -83,6 +88,24 @@ const NewBoard = () => {
               }`}
             />
           )}
+        </div>
+        <div className="flex items-center gap-2">
+          <Controller
+            control={control}
+            name="isPrivate"
+            render={({ field: { value, onChange } }) => (
+              <>
+                <Checkbox
+                  id="isPrivate"
+                  checked={!!value}
+                  onCheckedChange={onChange}
+                />
+                <label htmlFor="isPrivate" className="text-sm">
+                  Private Board
+                </label>
+              </>
+            )}
+          />
         </div>
         <Button type="submit" variant="outline">
           Create Board

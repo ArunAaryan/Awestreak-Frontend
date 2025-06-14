@@ -163,6 +163,7 @@ export function useLeaveBoard(setLoading: (isLoading: boolean) => void) {
   });
 }
 export const editBoard = async (boardData: IBoardInput) => {
+  console.log("boardData", boardData);
   const res = await axiosClient.put(`boards/${boardData.id}`, boardData);
   return res.data;
 };
@@ -281,5 +282,19 @@ export function useGetLogs(streakId: string) {
       queryClient.setQueryData(["logs"], data);
     },
     enabled: false,
+  });
+}
+
+export const getPrivateBoards = async () => {
+  const res = await axiosClient.get("/boards/private?joinStreak=true");
+  return res.data;
+};
+
+export function useGetPrivateBoards(initialData: any) {
+  return useQuery<Array<IBoardProps>>({
+    queryKey: ["boards", "private"],
+    queryFn: getPrivateBoards,
+    staleTime,
+    initialData,
   });
 }

@@ -4,6 +4,7 @@ import {
   boardListLoaderMy,
   useGetAllBoards,
   useGetMyBoards,
+  useGetPrivateBoards,
 } from "@/api/boards/boards-api.ts";
 import { IBoardProps } from "@/api/boards/boards.types.ts";
 import { useContext, useEffect, useState } from "react";
@@ -11,7 +12,8 @@ import { useLoaderData } from "react-router-dom";
 import { loaderContext } from "../LoaderContext.ts";
 
 interface IBoardList {
-  boards: Array<IBoardProps>;
+  boards?: Array<IBoardProps>;
+  privateOnly?: boolean;
 }
 
 const BoardList_: React.FC<IBoardList> = ({ boards }) => {
@@ -35,19 +37,28 @@ const BoardList_: React.FC<IBoardList> = ({ boards }) => {
   );
 };
 
-const BoardList = () => {
+const BoardList = ({ type }: { type: "all" | "my" | "private" }) => {
   const { setLoading } = useContext(loaderContext);
   const [isVisible, setIsVisible] = useState(false);
-  const initialData = useLoaderData() as Awaited<
-    ReturnType<ReturnType<typeof boardListLoaderMy>>
-  >;
-  const initialData2 = useLoaderData() as Awaited<
-    ReturnType<ReturnType<typeof boardListLoaderAll>>
-  >;
-  const myBoards = window.location.href.includes("/boards/my") ? true : false;
-  const { data: boards, isLoading } = !myBoards
-    ? useGetAllBoards(initialData2)
-    : useGetMyBoards(initialData);
+  const initialData = useLoaderData();
+
+  // Call all hooks at the top level
+  const allBoards = useGetAllBoards(initialData);
+  const myBoards = useGetMyBoards(initialData);
+  const privateBoards = useGetPrivateBoards(initialData);
+
+  let boards: IBoardProps[] | undefined;
+  let isLoading: boolean = false;
+  if (type === "all") {
+    boards = allBoards.data;
+    isLoading = allBoards.isLoading;
+  } else if (type === "my") {
+    boards = myBoards.data;
+    isLoading = myBoards.isLoading;
+  } else if (type === "private") {
+    boards = privateBoards.data;
+    isLoading = privateBoards.isLoading;
+  }
 
   useEffect(() => {
     if (isLoading) {

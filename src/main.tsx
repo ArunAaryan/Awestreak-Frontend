@@ -36,7 +36,7 @@ const router = createBrowserRouter([
       },
       {
         index: true,
-        element: <BoardList />,
+        element: <BoardList type="all" />,
         path: "/",
       },
     ],
@@ -47,13 +47,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: "all",
-        element: <BoardList />,
+        element: <BoardList type="all" />,
         // loader: boardListLoaderAll(queryClient),
       },
       {
         path: "my",
-        element: <BoardList />,
+        element: <BoardList type="my" />,
         // loader: boardListLoaderMy(queryClient),
+      },
+      {
+        path: "private",
+        element: <BoardList type="private" />,
       },
       {
         element: <BoardDetail />,

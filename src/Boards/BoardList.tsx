@@ -84,13 +84,13 @@ const BoardList = ({ type }: { type: "all" | "my" | "private" }) => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${
+      className={`flex flex-col items-center justify-center transition-all duration-500 ease-in-out pt-10 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
       }`}
     >
-      <p className="text-foreground text-xl">
+      <h3 className="text-foreground text-xl font-semibold">
         You have not joined any board yet!
-      </p>
+      </h3>
     </div>
   );
 };

@@ -15,8 +15,8 @@ const Navitem: React.FC<INavItem> = ({ link, name, icon }) => {
       <div
         className={`px-5 py-1 text-foreground
            rounded-md hover:border-border hover:cursor-pointer flex flex-col 
-           justify-center items-center hover:border transition-all duration-300 
-           ease-in-out ${
+           justify-center items-center hover:border 
+           ${
              isSelected
                ? "bg-primary text-primary-foreground font-semibold"
                : ""

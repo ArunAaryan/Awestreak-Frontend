@@ -136,7 +136,7 @@ const Root = () => {
               <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                 <div className="min-h-screen bg-background text-foreground transition-colors duration-200">
                   <div className="flex mx-auto min-h-screen justify-center pt-16">
-                    <div className="flex flex-col gap-4 px-4 md:px-10 py-4 min-h-screen max-w-2xl justify-start items-stretch flex-1 bg-card text-card-foreground rounded-lg shadow-sm ">
+                    <div className="flex flex-col gap-4 px-4 md:px-10 py-4 min-h-screen max-w-2xl justify-start items-stretch flex-1  text-card-foreground rounded-lg shadow-sm ">
                       <Navbar />
                       <ScrollToTop />
                       <Outlet />

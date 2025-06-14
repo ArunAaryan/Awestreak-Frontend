@@ -121,7 +121,7 @@ const BoardDetail = () => {
                           variant="outline"
                           onClick={() => joinBoard.mutate(board?.id)}
                         >
-                          join
+                          Join
                         </Button>
                       )}
 

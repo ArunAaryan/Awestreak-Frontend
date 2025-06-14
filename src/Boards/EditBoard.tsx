@@ -141,10 +141,7 @@ const EditBoard = () => {
               <FormItem>
                 <FormLabel>Image URL</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="https://example.com/image.png"
-                    {...field}
-                  />
+                  <Input placeholder="https://img.com/image.png" {...field} />
                 </FormControl>
                 <FormDescription>
                   Provide a valid image URL for your board.
